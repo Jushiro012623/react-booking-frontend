@@ -19,7 +19,7 @@ const Booking = () => {
             <Typography variant='h3'>Lorem ipsum dolor sit amet.</Typography>
             <Typography variant='info2'>Lorem ipsum dolor sit amet consectetur adipisicing.</Typography>
             <Voyages />
-            {/* <Routes /> */}
+            <Routes />
             <div className='flex gap-4 items-center mt-6'>
                 <Button>Back</Button>
                 <Button color='primary'>Next</Button>

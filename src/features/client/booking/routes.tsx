@@ -1,10 +1,7 @@
-import Typography from '@/components/ui/Typography'
 import { useApiRequest } from '@/hooks/useApiRequest'
 import { ApiRequestBuilder } from '@/service/apiRequestBuilder'
-import { Card } from '@heroui/card'
 import React from 'react'
 import {Select, SelectItem} from "@heroui/select";
-import { Button } from '@heroui/button'
 
 const Routes = () => {
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),[])
