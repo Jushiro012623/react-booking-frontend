@@ -39,7 +39,7 @@ const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose} : any) 
 
 const Voyages = () => {
 
-    const { setBookingValue } = useBookingContext()
+    const { setBookingValue, dispatch } = useBookingContext()
 
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder()
         .setUrl('/client/bookingProcess/getVoyagesList')
@@ -47,7 +47,7 @@ const Voyages = () => {
     
     const { data , error, isLoading } = useApiRequest(fetchVoyagesFromAPI);
 
-    const beforeData = isLoading ? 3 : data?.length;
+    const beforeData = isLoading ? 3 : data?.length || 3;
 
     if(error) return <div>Error: {error.message}</div>
     const handleOnVoyageChoose = (event: any) => {
@@ -57,6 +57,8 @@ const Voyages = () => {
             ...prev,
             voyage
         }))
+        
+        dispatch({ type: "NEXT" })
     }
 
     return (
