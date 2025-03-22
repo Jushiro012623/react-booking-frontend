@@ -4,6 +4,8 @@ import Voyages from '@/features/client/booking/voyages';
 import {Progress} from "@heroui/progress";
 import Routes from '@/features/client/booking/routes';
 import { Button } from '@heroui/button';
+import Fares from '@/features/client/booking/fares';
+
 const Booking = () => {
   return (
     <div className="min-h-screen w-full place-items-center pt-16">
@@ -19,7 +21,8 @@ const Booking = () => {
             <Typography variant='h3'>Lorem ipsum dolor sit amet.</Typography>
             <Typography variant='info2'>Lorem ipsum dolor sit amet consectetur adipisicing.</Typography>
             <Voyages />
-            <Routes />
+            {/* <Routes /> */}
+            {/* <Fares /> */}
             <div className='flex gap-4 items-center mt-6'>
                 <Button>Back</Button>
                 <Button color='primary'>Next</Button>

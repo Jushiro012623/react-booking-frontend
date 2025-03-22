@@ -6,7 +6,8 @@ const cache: Record<string, any> = {};
 
 const CACHE_DURATION = 5 * 60 * 1000;
 
-const BASE_URL = import.meta.env.VITE_API_DEV_URL || 'http://192.168.123.137:8090/api/v1';
+// const BASE_URL = import.meta.env.VITE_API_DEV_URL || 'http://192.168.123.137:8090/api/v1';
+const BASE_URL = import.meta.env.VITE_API_DEV_URL || 'http://127.0.0.1:8000/api/v1';
 
 
 export const useApiRequest = (builder: ApiRequestBuilder) => {
