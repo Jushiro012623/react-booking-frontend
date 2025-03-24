@@ -10,7 +10,7 @@ const Fares = () => {
         .setMethod('POST')
         .setData({
             "booking_route_code" : "BRC20250305140326VWWYU3TOC9I47VLJDOH7",
-            "booking_type" : 1
+            "booking_type" : 3
         })
     ,[])
 
@@ -28,7 +28,7 @@ const Fares = () => {
                 items={data}
             >
                 {(fare : any) => 
-                <SelectItem key={fare.cargo_fare_matrices_code}>{fare.details}</SelectItem>}
+                <SelectItem key={fare.cargo_fare_matrices_code}>{fare.details}{fare.fare}</SelectItem>}
             </Select>
                 </div>
         </React.Fragment>

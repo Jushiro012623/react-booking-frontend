@@ -24,7 +24,9 @@ const Booking = () => {
                 </div>
                 <Typography variant='h3'>Lorem ipsum dolor sit amet.</Typography>
                 <Typography variant='info2'>Lorem ipsum dolor sit amet consectetur adipisicing.</Typography>
-                {state.step === 1 && <Voyages />}
+                {state.step === 1 &&  <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">       
+                    <Voyages />
+        </div>}
                 {state.step === 2 && <Routes /> }
                 {state.step === 3 && <Fares /> }
 

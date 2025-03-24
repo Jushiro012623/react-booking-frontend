@@ -62,9 +62,9 @@ const Voyages = () => {
     }
 
     return (
-        <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">       
+        <>       
             <VoyageCard beforeData={beforeData} data={data} isLoading={isLoading} handleOnVoyageChoose={handleOnVoyageChoose} />
-        </div>
+        </>
     )
 }
 
