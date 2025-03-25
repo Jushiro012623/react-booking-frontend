@@ -27,7 +27,6 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
         const cacheKey = `${method}_${url}_${JSON.stringify(params)}_${JSON.stringify(responseData)}`;
         const cached = cache[cacheKey];
 
-        console.log(cacheKey === cached?.cacheKey);
         if (method === 'GET' && cached && cached.expiry > Date.now() ) {
             setResponseData(cached.data);
             setIsLoading(false);

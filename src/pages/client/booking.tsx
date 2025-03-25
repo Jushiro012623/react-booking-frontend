@@ -6,11 +6,12 @@ import Routes from '@/features/client/booking/routes';
 import { Button } from '@heroui/button';
 import Fares from '@/features/client/booking/fares';
 import { useBookingContext } from '@/context/bookingContextProvider';
+import BookingType from '@/features/client/booking/bookingType';
 
 const Booking = () => {
 
-    const { state, dispatch } = useBookingContext()
-    console.log(state.step)
+    const { state, dispatch, bookingValue } = useBookingContext()
+    console.log(bookingValue)
     return (
         <div className="min-h-screen w-full place-items-center pt-16">
             <div className='relative w-full px-10 lg:w-[900px] 2xl:w-[1000px] '>
@@ -24,11 +25,10 @@ const Booking = () => {
                 </div>
                 <Typography variant='h3'>Lorem ipsum dolor sit amet.</Typography>
                 <Typography variant='info2'>Lorem ipsum dolor sit amet consectetur adipisicing.</Typography>
-                {state.step === 1 &&  <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">       
-                    <Voyages />
-        </div>}
+                {state.step === 1 &&  <Voyages />}
                 {state.step === 2 && <Routes /> }
-                {state.step === 3 && <Fares /> }
+                {state.step === 3 && <BookingType /> }
+                {state.step === 4 && <Fares /> }
 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button onPress={() => dispatch({type: "BACK"})}>Back</Button>
