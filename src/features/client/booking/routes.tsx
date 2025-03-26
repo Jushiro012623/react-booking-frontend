@@ -8,12 +8,14 @@ import { useBookingContext } from '@/context/bookingContextProvider';
 import { Skeleton } from '@heroui/skeleton';
 
 const Routes = () => {
-    const [transpoType, setTranspoType] = React.useState(null);
     
+    const { setBookingValue, bookingValue } = useBookingContext()
+
+    const [transpoType, setTranspoType] = React.useState(bookingValue?.route?.transportation_type || null);
+
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),[])
     const { data , error, isLoading } = useApiRequest(fetchVoyagesFromAPI);
-
-    const { setBookingValue } = useBookingContext()
+    
 
     const handleSelectingTranspoType = (event : any) => {
         setBookingValue((prev: any) => ({
@@ -40,6 +42,7 @@ const Routes = () => {
                         onChange={handleSelectingTranspoType}
                         className="max-w-xs" 
                         label="Transportation Type"
+                        defaultSelectedKeys={[transpoType]}
                     >
                         <SelectItem key="in">IN</SelectItem>
                         <SelectItem key="out">OUT</SelectItem>
@@ -54,9 +57,10 @@ const Routes = () => {
                         label="Route" 
                         className="max-w-full"
                         items={data ? data.filter((route: any) => route.transportation_type === transpoType) : []}
+                        defaultSelectedKeys={[bookingValue?.route?.booking_route_code]}
                     >
                         {(route : any) => 
-                        <SelectItem key={route.booking_route_code} textValue={`${route.origin} → ${route.destination}`}>
+                        <SelectItem key={route.booking_route_code} textValue={route.label}>
                             <div className='flex justify-between'>
                                 <Typography>{route.origin}</Typography>
                                 <FaLongArrowAltRight />

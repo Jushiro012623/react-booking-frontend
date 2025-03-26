@@ -6,7 +6,7 @@ import { Card } from "@heroui/card";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
 
-const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose} : any) => {
+const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose, bookingValue} : any) => {
     if(isLoading){
         return(
             <React.Fragment>
@@ -24,7 +24,12 @@ const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose} : any) 
         return(
             <React.Fragment>
                 {data?.map((voyage : any , index : number) => (
-                    <Card key={index} className='h-full w-full' isHoverable isPressable>
+                    <Card 
+                        key={index} 
+                        className={`h-full w-full ${bookingValue?.voyage.voyage_code === voyage.voyage_code ? 'ring ring-blue-100' : null}`} 
+                        isHoverable 
+                        isPressable
+                    >
                         <label className='h-full w-full p-2 text-center flex flex-col justify-center gap-2  cursor-pointer'>
                             <Typography variant='h1' className='tracking-wider '>{voyage.label}</Typography>
                             <Typography variant='small'>{voyage.description}</Typography>
@@ -39,7 +44,7 @@ const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose} : any) 
 
 const Voyages = () => {
 
-    const { setBookingValue, dispatch } = useBookingContext()
+    const { bookingValue, setBookingValue, dispatch } = useBookingContext()
 
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder()
         .setUrl('/client/bookingProcess/getVoyagesList')
@@ -62,9 +67,7 @@ const Voyages = () => {
     }
 
     return (
-        <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">       
-            <VoyageCard beforeData={beforeData} data={data} isLoading={isLoading} handleOnVoyageChoose={handleOnVoyageChoose} />
-        </div>
+            <VoyageCard beforeData={beforeData} data={data} isLoading={isLoading} handleOnVoyageChoose={handleOnVoyageChoose} bookingValue={bookingValue}/>
     )
 }
 
