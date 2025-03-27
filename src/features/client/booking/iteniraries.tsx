@@ -57,7 +57,7 @@ const Itineraries = () => {
         : (data.data.map((itinerary: any) => (
             <React.Fragment key={itinerary.itinerary_code}>
               <Card
-                className="max-w-[900px] py-3 h-40"
+                className={`max-w-[900px] py-3 h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? 'ring ring-blue-100' : null}`}
                 fullWidth
                 isPressable
                 isHoverable

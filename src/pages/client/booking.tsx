@@ -10,6 +10,7 @@ import BookingType from '@/features/client/booking/bookingType';
 import { addToast } from "@heroui/toast";
 import Itineraries from '@/features/client/booking/iteniraries';
 import BookingDrawer from '@/components/bookingDrawer';
+import FillupInfo from '@/features/client/booking/fillupInfo';
 const Booking = () => {
 
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
@@ -79,7 +80,7 @@ const Booking = () => {
                 </div>}
                 {state.step === 4 && <Fares /> }
                 {state.step === 5 && <Itineraries />}
-                {state.step === 6 && <Itineraries />}
+                {state.step === 6 && <FillupInfo />}
 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button onPress={() => dispatch({type: "BACK"})}>Back</Button>
