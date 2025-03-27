@@ -60,6 +60,7 @@ const Voyages = () => {
 
         setBookingValue((prev: any) => ({
             ...prev,
+            itineraries: null,
             voyage
         }))
         

@@ -17,6 +17,8 @@ const BookingType = () => {
 
         setBookingValue((prev: any) => ({
             ...prev,
+            fare: null,
+            itineraries: null,
             booking_type
         }))
         

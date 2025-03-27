@@ -9,6 +9,7 @@ import { useBookingContext } from '@/context/bookingContextProvider';
 import BookingType from '@/features/client/booking/bookingType';
 import { addToast } from "@heroui/toast";
 import Itineraries from '@/features/client/booking/iteniraries';
+import BookingDrawer from '@/components/bookingDrawer';
 const Booking = () => {
 
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
@@ -53,11 +54,14 @@ const Booking = () => {
     }
     return (
         <div className="min-h-screen w-full place-items-center pt-16">
-            <div className='relative w-full px-10 lg:w-[900px] 2xl:w-[1000px] '>
+            <div className='relative w-full px-10 lg:w-[900px] 2xl:w-[1000px]'>
                 <Breadcrumbs className='mb-10'>
                     <BreadcrumbItem>Home</BreadcrumbItem>
                     <BreadcrumbItem>Booking</BreadcrumbItem>
                 </Breadcrumbs>
+                
+                <BookingDrawer />
+                
                 <div className='space-y-2 mb-5'>
                     <Typography variant='info2' className='mt-10'>Step Progress</Typography>
                     <Progress aria-label="Loading..." size="sm" className="max-w-full" value={state.value} />
@@ -75,6 +79,7 @@ const Booking = () => {
                 </div>}
                 {state.step === 4 && <Fares /> }
                 {state.step === 5 && <Itineraries />}
+                {state.step === 6 && <Itineraries />}
 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button onPress={() => dispatch({type: "BACK"})}>Back</Button>

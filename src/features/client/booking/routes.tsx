@@ -28,6 +28,8 @@ const Routes = () => {
         const route = await data.find((route: any) => route.booking_route_code === event.target.value )
         setBookingValue((prev: any) => ({
             ...prev,
+            fare: null,
+            itineraries: null,
             route
         }))
     }
