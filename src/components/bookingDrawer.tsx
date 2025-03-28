@@ -88,7 +88,7 @@ const BookingDrawer = () => {
                     </div>
                     <Divider className="my-1" />
                     <div className='w-full flex items-center justify-between mt-10'>
-                        <Typography variant='h6'>TOTAL AMOUNT</Typography>
+                        <Typography variant='h6' color='primary'>TOTAL AMOUNT</Typography>
                         <Typography variant='small'>{bookingValue?.fare?.fare || '----'}</Typography>
                     </div>
                     <Divider className="my-1" />

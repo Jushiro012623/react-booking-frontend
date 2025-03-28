@@ -19,6 +19,7 @@ const BookingType = () => {
             ...prev,
             fare: null,
             itineraries: null,
+            info: {discount: 'REGULAR', quantity:1},
             booking_type
         }))
         

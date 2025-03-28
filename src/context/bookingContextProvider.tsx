@@ -33,17 +33,19 @@ const BookingContextReducer = (state: any, action: any) => {
 const stepDetails = (state : any) => {
     switch(state.step){
         case 1:
-            return { errorMessage: "Please select a voyage.", title:"Where would you like to board with us?", subtitle: "Hop on and let's make your ride unforgettable!" }
+            return { errorMessage: "Please select a voyage.", title:"Where would you like to board with us?", subtitle: "Select your preferred voyage to begin.", stepProgress: "Let's Begin" }
         case 2:
-            return { errorMessage: "Please select a route.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing." }
+            return { errorMessage: "Please select a route.", title:"Where would you like to go?", subtitle: "Select your preferred route for the journey.", stepProgress: "" }
         case 3:
-            return { errorMessage: "Please select a booking type.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing." }
+            return { errorMessage: "Please select a booking type.", title:"What type of booking would you like?", subtitle: "Choose the booking type that suits your need.", stepProgress: "" }
         case 4:
-            return { errorMessage: "Please select fares.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing." }
+            return { errorMessage: "Please select fares.", title:"Which fare option would you prefer", subtitle: "Select the fare that best suits your needs.", stepProgress: "" }
         case 5:
-            return { errorMessage: "Please select initerary.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing." }
+            return { errorMessage: "Please select initerary.", title:"Which itinerary  suits you?", subtitle: "Choose your preferred schedule for the trip.", stepProgress: "" }
+        case 6:
+            return { errorMessage: "Please fill up all fields.", title:"What information do we need from you?", subtitle: "Please fill in the details to complete your booking.", stepProgress: "" }
         default:
-            return { errorMessage: "An error occurred.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing." }
+            return { errorMessage: "An error occurred.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing.", stepProgress: "" }
     }
 }
 

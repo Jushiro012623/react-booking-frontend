@@ -41,6 +41,7 @@ const Routes = () => {
             <Skeleton isLoaded={!isLoading} className='w-full rounded-lg'>
                 <div className='w-xs rounded-lg'>
                     <Select 
+                        isRequired
                         onChange={handleSelectingTranspoType}
                         className="max-w-xs" 
                         label="Transportation Type"
@@ -54,6 +55,7 @@ const Routes = () => {
             <Skeleton isLoaded={!isLoading} className='w-full rounded-lg'>
                 <div className='w-xs rounded-lg'>
                     <Select 
+                        isRequired
                         isDisabled={transpoType == "" || transpoType == null ? true : false}
                         onChange={handleSelectingRoute}
                         label="Route" 

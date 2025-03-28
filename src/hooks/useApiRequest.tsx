@@ -71,6 +71,7 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
         } catch (error : any) {
             if (error.name === 'AbortError') {
                 console.log('Request was cancelled');
+                setError(error);
             } else {
                 setError(error.message);
             }

@@ -54,7 +54,16 @@ const Voyages = () => {
 
     const beforeData = isLoading ? 3 : data?.length || 3;
 
-    if(error) return <div>Error: {error.message}</div>
+    if(error) {
+        if(error === 'canceled'){
+            console.log(error)
+            return <div>Request was canceled</div>
+        }
+        console.log(error)
+        return <div>Error: {error.message}</div>
+    }
+
+
     const handleOnVoyageChoose = (event: any) => {
         const voyage : any = JSON.parse(event.target.value);
 

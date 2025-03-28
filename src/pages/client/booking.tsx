@@ -15,27 +15,35 @@ const Booking = () => {
 
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
 
+    const info = bookingValue?.info;
     const canProceedToNextStep = () => {
         switch(state.step){
             case 1:
-                return bookingValue?.voyage ? true : false
+                return !!bookingValue?.voyage
             case 2:
-                return bookingValue?.route ? true : false
+                return !!bookingValue?.route
             case 3:
-                return bookingValue?.booking_type ? true : false
+                return !!bookingValue?.booking_type
             case 4:
-                return bookingValue?.fare ? true : false
+                return !!bookingValue?.fare
             case 5:
-                return true
+                return !!bookingValue?.itineraries
             case 6:
-                return true
+                if(bookingValue?.booking_type?.id === 1){
+                    return !!info?.contact_no && !!info?.discount && !!info?.passenger_name && !!info?.add_ons && !!info?.quantity
+                }else if(bookingValue?.booking_type?.id === 2){
+                    return !!info?.contact_no && !!info?.plate_number && !!info?.shipper_name
+                }else if(bookingValue?.booking_type?.id === 3){
+                    return !!info?.contact_no && !!info?.receiver_contact_no && !!info?.receiver_name && !!info?.quantity && !!info?.shipper_name
+                }else{
+                    return false
+                }
             default:
                 return false
         }
+
     }
-
     console.log(bookingValue)
-
     const handleOnNext = () => {
         if(canProceedToNextStep()){
             dispatch({type: "NEXT"})
@@ -64,11 +72,11 @@ const Booking = () => {
                 <BookingDrawer />
                 
                 <div className='space-y-2 mb-5'>
-                    <Typography variant='info2' className='mt-10'>Step Progress</Typography>
+                    <Typography variant='info2' className='mt-10'>Booking Progress</Typography>
                     <Progress aria-label="Loading..." size="sm" className="max-w-full" value={state.value} />
                 </div>
                 <Typography variant='h3'>{stepDetails(state).title}</Typography>
-                <Typography variant='info2' className='italic'>{stepDetails(state).subtitle}</Typography>
+                <Typography variant='body2' className='italic'>{stepDetails(state).subtitle}</Typography>
                 {state.step === 1 &&  
                 <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">
                      <Voyages />

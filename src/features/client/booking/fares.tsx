@@ -11,8 +11,7 @@ import {
 } from "@heroui/table";
 
 import { useBookingContext } from "@/context/bookingContextProvider";
-import { Skeleton } from "@heroui/skeleton";
-import { Card } from "@heroui/card";
+import { Spinner } from "@heroui/spinner";
 
 const columns = [
   { key: "details", label: "DETAILS" },
@@ -64,27 +63,27 @@ const Fares = () => {
   };
   return (
     <div className="mt-10">
-      {isLoading ? (
-        <Card className="h-full w-full" radius="lg">
-          <Skeleton className="rounded-lg h-40">
-            <div className="h-24 rounded-lg bg-default-300" />
-          </Skeleton>
-        </Card>
-      ) : (
+      
         <Table
+          isVirtualized
           color="primary"
           aria-label="Fare Matrices Table"
           selectionMode="multiple"
           selectionBehavior="replace"
           defaultSelectedKeys={[
             bookingValue?.fare?.cargo_fare_matrices_code ?? "",
-          ]}>
+          ]}
+          maxTableHeight={300}>
           <TableHeader columns={columns}>
             {(column: any) => (
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
-          <TableBody items={data ?? []}>
+          <TableBody
+            items={data ?? []}
+            isLoading={isLoading}
+            emptyContent={"No fair to display."}
+            loadingContent={<Spinner label="Loading..." />}>
             {(fare: any) => (
               <TableRow
                 key={fare.cargo_fare_matrices_code}
@@ -98,7 +97,6 @@ const Fares = () => {
             )}
           </TableBody>
         </Table>
-      )}
     </div>
   );
 };
