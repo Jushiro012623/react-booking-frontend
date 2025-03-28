@@ -25,7 +25,6 @@ const AdditionalFeeRadio = (props: any) => {
     </Radio>
   );
 };
-
 const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
   const discounts = [
     { key: 1, label: "REGULAR", value: "REGULAR" },
@@ -135,7 +134,6 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
     </React.Fragment>
   );
 };
-
 const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
   return (
     <React.Fragment>

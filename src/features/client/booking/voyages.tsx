@@ -5,7 +5,6 @@ import { Skeleton } from "@heroui/skeleton";
 import { Card } from "@heroui/card";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
-
 const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose, bookingValue} : any) => {
     if(isLoading){
         return(
@@ -26,11 +25,11 @@ const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose, booking
                 {data?.map((voyage : any , index : number) => (
                     <Card 
                         key={index} 
-                        className={`h-full w-full ${bookingValue?.voyage.voyage_code === voyage.voyage_code ? 'ring ring-blue-100' : null}`} 
+                        className={`h-full w-full relative ${bookingValue?.voyage.voyage_code === voyage.voyage_code ? 'ring ring-blue-100' : null}`} 
                         isHoverable 
                         isPressable
                     >
-                        <label className='h-full w-full p-2 text-center flex flex-col justify-center gap-2  cursor-pointer'>
+                        <label className='h-full w-full p-2 text-center flex flex-col justify-center gap-2  cursor-pointer absolute z-10'>
                             <Typography variant='h1' className='tracking-wider '>{voyage.label}</Typography>
                             <Typography variant='small'>{voyage.description}</Typography>
                             <input type="radio" value={JSON.stringify(voyage)} name='voyage_code' className='hidden' onChange={handleOnVoyageChoose}/>

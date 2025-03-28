@@ -44,6 +44,8 @@ const stepDetails = (state : any) => {
             return { errorMessage: "Please select initerary.", title:"Which itinerary  suits you?", subtitle: "Choose your preferred schedule for the trip.", stepProgress: "" }
         case 6:
             return { errorMessage: "Please fill up all fields.", title:"What information do we need from you?", subtitle: "Please fill in the details to complete your booking.", stepProgress: "" }
+        case 7:
+            return { errorMessage: "Please agree to terms and conditions.", title:"Ready to confirm your booking?", subtitle: "Take a moment to review your booking  summary.", stepProgress: "" }
         default:
             return { errorMessage: "An error occurred.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing.", stepProgress: "" }
     }

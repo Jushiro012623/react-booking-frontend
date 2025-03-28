@@ -11,11 +11,55 @@ import { addToast } from "@heroui/toast";
 import Itineraries from '@/features/client/booking/iteniraries';
 import BookingDrawer from '@/components/bookingDrawer';
 import FillupInfo from '@/features/client/booking/fillupInfo';
+import ConfirmBooking from '@/features/client/booking/confirmBooking';
+import { Api } from '@/service/axios';
+import { ApiRequestBuilder } from '@/service/apiRequestBuilder';
+import React from 'react';
+
 const Booking = () => {
 
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
 
+    const GENERATE_TRANSACTION_ID = `RFN-${Math.random().toString(36).substring(2, 10000000000).toUpperCase()} `
+
+    const valueToSubmit = () => {
+        const values: any = {
+            cargo_fare_matrices_code: bookingValue?.fare?.cargo_fare_matrices_code,
+            itinerary_code: bookingValue?.itineraries?.itinerary_code,
+            contact_no: bookingValue?.info?.contact_no,
+            reference_no: GENERATE_TRANSACTION_ID,
+            booking_type: bookingValue?.booking_type?.id,
+        }
+        if( bookingValue?.booking_type?.id === 1 ){
+            values.add_ons = bookingValue?.info?.add_ons
+            values.discount = bookingValue?.info?.discount
+            values.quantity = bookingValue?.info?.quantity
+            values.passenger_name = bookingValue?.info?.passenger_name
+        }
+        if( bookingValue?.booking_type?.id === 2 ){
+            values.plate_number = bookingValue?.info?.plate_number
+            values.shipper_name = bookingValue?.info?.shipper_name
+        }
+        if( bookingValue?.booking_type?.id === 3 ){
+            values.quantity = bookingValue?.info?.quantity
+            values.shipper_name = bookingValue?.info?.shipper_name
+            values.receiver_contact_no = bookingValue?.info?.receiver_contact_no
+            values.receiver_name = bookingValue?.info?.receiver_name
+        }
+        return values
+    }
     const info = bookingValue?.info;
+    const submitBookingRequest = React.useMemo(() =>{
+        const payload = {
+            ...valueToSubmit()
+        };
+        console.log(payload)
+        return new ApiRequestBuilder()
+        .setData(payload)
+        .setMethod("POST")
+        .setUrl('client/bookingProcess/cargoBookingProcess')
+    },[bookingValue])
+
     const canProceedToNextStep = () => {
         switch(state.step){
             case 1:
@@ -38,15 +82,36 @@ const Booking = () => {
                 }else{
                     return false
                 }
+            case 7:
+                return true
             default:
                 return false
         }
 
     }
-    console.log(bookingValue)
-    const handleOnNext = () => {
+    const handleOnNext = async () => {
         if(canProceedToNextStep()){
-            dispatch({type: "NEXT"})
+            if(state.step === 7){
+                try {
+                    const response: any = await Api(submitBookingRequest.build())
+                    if(response.status === 200){
+                        addToast({
+                            shouldShowTimeoutProgress: true,
+                            timeout: 3000,
+                            title: "Booking Successful",
+                            description: "Your booking has been successfully processed. You will receive a confirmation email shortly.",
+                            variant: 'flat',
+                            color: "success",
+                        })
+                        console.log(await response.data)
+                        dispatch({type: "RESET"})
+                    }
+                } catch (error) {
+                    
+                }
+                return
+            }
+            return dispatch({type: "NEXT"})
 
         }else{
             
@@ -89,10 +154,11 @@ const Booking = () => {
                 {state.step === 4 && <Fares /> }
                 {state.step === 5 && <Itineraries />}
                 {state.step === 6 && <FillupInfo />}
+                {state.step === 7 && <ConfirmBooking />}
 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button onPress={() => dispatch({type: "BACK"})}>Back</Button>
-                    <Button onPress={handleOnNext} color='primary'>Next</Button>
+                    <Button onPress={handleOnNext} color='primary'>{state.step !== 7 ? "NEXT" : "SUBMIT"}</Button>
                 </div>
             </div>  
         </div>
