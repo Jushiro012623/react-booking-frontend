@@ -4,6 +4,7 @@ import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card'
 import { Divider } from '@heroui/divider'
 import { Image } from '@heroui/image'
 import { Spacer } from '@heroui/spacer'
+
 const ConfirmBooking = () => {
     const { bookingValue} = useBookingContext()
   return (
