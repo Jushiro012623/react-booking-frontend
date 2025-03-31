@@ -125,11 +125,11 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         label="Add Ons"
         className="w-full"
         onValueChange={(value) => handleOnInputChange(value, "add_ons")}>
-        <AdditionalFeeRadio description="Airconditioned Voyages" value={true}>
+        <AdditionalFeeRadio description="Airconditioned Voyages" value={2}>
           Airconditioned
         </AdditionalFeeRadio>
         <Spacer y={1} />
-        <AdditionalFeeRadio description="Basic Voyages" value={false}>
+        <AdditionalFeeRadio description="Basic Voyages" value={1}>
           Basic
         </AdditionalFeeRadio>
       </RadioGroup>

@@ -55,6 +55,8 @@ const BookingContextReducer = (state: IStepState, action: any) => {
       return {step: Math.min(state.step + 1, 7), value: Math.min(state.value + 16.66666666666667, 100)}
     case "BACK":
       return {step: Math.max(state.step - initialState.step, initialState.step), value: Math.max(state.value - 16.66666666666667, initialState.value)}
+    case "RESET":
+      return initialState
     case "NONE":
       return {...state}
     default: 

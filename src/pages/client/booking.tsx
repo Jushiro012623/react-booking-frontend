@@ -1,5 +1,5 @@
 import { addToast } from "@heroui/toast";
-import { Api as SendApiRequest } from '@/service/axios';
+import { Api as SendApiRequest } from '@/service/apiRequest';
 import { ApiRequestBuilder } from '@/service/apiRequestBuilder';
 import { Breadcrumbs, BreadcrumbItem } from "@heroui/breadcrumbs";
 import { Button } from '@heroui/button';
@@ -16,10 +16,47 @@ import BookingDrawer from '@/components/bookingDrawer';
 import FillupInfo from '@/features/client/booking/fillupInfo';
 import ConfirmBooking from '@/features/client/booking/confirmBooking';
 import React from 'react';
+import { Spinner } from "@heroui/spinner";
+import { Skeleton } from "@heroui/skeleton";
 
+
+
+const BookingStepContent = [
+    {
+        step: 1, 
+        content:    <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7"> <Voyages /> </div>
+   },
+   {
+        step: 2,
+        content:    <Routes />
+   },
+   {
+        step: 3,
+        content:    <div className="booking-type h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7"> <BookingType /> </div>
+   },
+   {
+        step: 4,
+        content:    <Fares />
+   },
+   {
+        step: 5,
+        content:    <Itineraries />
+   },
+   {
+        step: 6,
+        content:    <FillupInfo />
+   },
+   {
+        step: 7,
+        content:    <ConfirmBooking />
+   },
+
+]
 const Booking = () => {
 
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
+    const [ isBookingLoading, setIsBookingLoading ] = React.useState<boolean>(false)
+
 
     const submitBookingRequest = React.useMemo(() =>{
         const payload = {
@@ -32,19 +69,12 @@ const Booking = () => {
     },[bookingValue])
 
     const handleOnNext = async () => {
-        if(!canProceedToNextStep(state, bookingValue)){        
-            addToast({
-                shouldShowTimeoutProgress: true,
-                timeout: 3000,
-                title: "Booking Error",
-                description: stepDetails(state).errorMessage,
-                variant: 'flat',
-                color: "danger",
-            })
+        if(!canProceedToNextStep(state, bookingValue)){
             return dispatch({type: "NONE"})
         }
         if(state.step === 7){
             try {
+                setIsBookingLoading(true)
                 const response: any = await SendApiRequest(submitBookingRequest.build())
                 if(response.status === 200){
                     addToast({
@@ -55,12 +85,13 @@ const Booking = () => {
                         variant: 'flat',
                         color: "success",
                     })
-                    console.log(await response.data)
                     dispatch({type: "RESET"})
                 }
+                return dispatch({type: "RESET"})
             } catch (error) {
-                return
-                
+                return 
+            }finally{
+                setIsBookingLoading(false)
             }
         }
         return dispatch({type: "NEXT"})
@@ -68,6 +99,17 @@ const Booking = () => {
 
     console.log(bookingValue)
 
+    const submitButtonContent = () => {
+
+        if(isBookingLoading){
+            return "SUBMITTING"
+        }
+        if(state.step !== 7){
+            return 'NEXT'
+        }
+        return "SUBMIT"
+    }
+    
     return (
         <div className="min-h-screen w-full place-items-center pt-16">
             <div className='relative w-full px-10 lg:w-[900px] 2xl:w-[1000px]'>
@@ -77,32 +119,24 @@ const Booking = () => {
                 </Breadcrumbs>
                 
                 <BookingDrawer />
-                
+
                 <div className='space-y-2 mb-5'>
                     <Typography variant='info2' className='mt-10'>Booking Progress</Typography>
-                    <Progress aria-label="Loading..." size="sm" className="max-w-full" value={state.value} />
+                    <Progress aria-label="Progress" size="sm" className="max-w-full" value={state.value} />
                 </div>
 
                 <Typography variant='h3'>{stepDetails(state).title}</Typography>
                 <Typography variant='body2' className='italic'>{stepDetails(state).subtitle}</Typography>
-                
-                {state.step === 1 &&  
-                <div className="voyages h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">
-                     <Voyages />
-                </div>}
-                {state.step === 2 && <Routes /> }
-                {state.step === 3 &&  
-                <div className="booking-type h-[500px] mt-10 w-full flex flex-col gap-y-7 md:flex-row md:h-40 md:gap-x-7">
-                     <BookingType />
-                </div>}
-                {state.step === 4 && <Fares /> }
-                {state.step === 5 && <Itineraries />}
-                {state.step === 6 && <FillupInfo />}
-                {state.step === 7 && <ConfirmBooking />}
 
+                {BookingStepContent.map((content) => (
+                    <React.Fragment key={content.step}>
+                        {state.step === content.step && content.content}
+                    </React.Fragment>                         
+                ))}
+                
                 <div className='flex gap-4 items-center mt-6'>
-                    <Button onPress={() => dispatch({type: "BACK"})}>Back</Button>
-                    <Button onPress={handleOnNext} color='primary'>{state.step !== 7 ? "NEXT" : "SUBMIT"}</Button>
+                    <Button isDisabled={isBookingLoading} onPress={() => dispatch({type: "BACK"})}>Back</Button>
+                    <Button isDisabled={isBookingLoading} isLoading={isBookingLoading} onPress={handleOnNext} color='primary'>{submitButtonContent()}</Button>
                 </div>
             </div>  
         </div>

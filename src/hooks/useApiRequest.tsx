@@ -1,13 +1,12 @@
 import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
 import React from "react";
-import { Api as SendApiRequest } from "@/service/axios";
+import { Api as SendApiRequest } from "@/service/apiRequest";
 
 const cache: Record<string, any> = {};
 
-const CACHE_DURATION = 5 * 60 * 1000;
+const CACHE_DURATION = import.meta.env.VITE_CACHE_DURATION;
 
 export const useApiRequest = (builder: ApiRequestBuilder) => {
-    // const { url, method, params, data, headers } = builder.build();
     const httpRequest = builder.build()
     const [responseData, setResponseData] = React.useState<any>(null);
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
@@ -31,15 +30,6 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
 
         setIsLoading(true);
         try {
-            // const config: Record<string, any> = { 
-            //     url, 
-            //     method,
-            //     signal: abortController.signal };
-            
-            // if (params) config.params = params;
-            // if (data) config.data = data;
-            // if (headers) config.headers = headers;
-
             const response = await SendApiRequest(builder.setSignal(abortController.signal).build())
 
             if (response.status >= 400) {

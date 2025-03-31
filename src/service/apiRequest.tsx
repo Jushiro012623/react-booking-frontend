@@ -1,10 +1,9 @@
 import axios from "axios";
 import { ApiRequestBuilder } from "./apiRequestBuilder";
-const BASE_URL =
-  import.meta.env.VITE_API_DEV_URL || "http://127.0.0.1:8000/api/v1";
+import { config as app } from '@/config/app'
 
 export const axiosDefaults = new ApiRequestBuilder()
-  .setBaseUrl(BASE_URL)
+  .setBaseUrl(app.apiUrl)
   .setTimeout(5000)
   .setHeaders({ Accept: "application/json" })
 

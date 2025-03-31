@@ -13,7 +13,9 @@ const BookingDrawer = () => {
   const totalAmout = () => {
     let baseFare = Number(bookingValue?.fare?.fare)
 
-    baseFare = baseFare * (Number(bookingValue?.info?.quantity) || 1);
+    if(bookingValue?.booking_type?.id === 1){
+        baseFare = baseFare * (Number(bookingValue?.info?.quantity) || 1);
+    }
 
     switch (bookingValue?.info?.discount) {
         case "REGULAR":
@@ -30,7 +32,7 @@ const BookingDrawer = () => {
           break;
       }
 
-    if(bookingValue?.info?.add_ons){
+    if(bookingValue?.info?.add_ons === 2){
 
         baseFare += Number(bookingValue?.fare?.additional_fee) ?? 0
     }
@@ -43,15 +45,13 @@ const BookingDrawer = () => {
     if(!bookingValue?.info?.discount){
         return false
     }
-    else if(bookingValue?.info?.discount === "PWD" || bookingValue?.info?.discount === 'MINOR' || bookingValue?.info?.discount === 'STUDENT'){
+    if(bookingValue?.info?.discount === "PWD" || bookingValue?.info?.discount === 'MINOR' || bookingValue?.info?.discount === 'STUDENT'){
         return "20%"
     }
-    else if(bookingValue?.info?.discount === "HALF_FARE" ){
+    if(bookingValue?.info?.discount === "HALF_FARE" ){
         return "50%"
     }
-    else{
-        return "0%"
-    }
+    return "0%"
   }
   return (
     <div className='absolute top-0 right-10'>

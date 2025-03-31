@@ -1,6 +1,6 @@
 import { IStepState, IBookingValue } from "@/context/bookingContextProvider"
 
-const GENERATE_TRANSACTION_ID = `RFN-${Math.random().toString(36).substring(2, 10000000000).toUpperCase()}`
+const GENERATE_TRANSACTION_ID = `RFNS-${Math.random().toString(36).substring(2, 10000000000).toUpperCase()}`
 
 export const canProceedToNextStep = (state: IStepState, bookingValue: IBookingValue) => {
     
