@@ -5,7 +5,17 @@ import { Skeleton } from "@heroui/skeleton";
 import { Card } from "@heroui/card";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
-const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose, bookingValue} : any) => {
+import { IVoyage } from "@/types/bookingTypes"
+import { IBookingValue } from '@/context/bookingContextProvider'
+interface IVoyageCardProps {
+    data: any;
+    isLoading: boolean;
+    beforeData: number;
+    handleOnVoyageChoose: (event: React.ChangeEvent<HTMLInputElement>) => void
+    bookingValue: IBookingValue
+}
+
+const VoyageCard: React.FC<IVoyageCardProps> = ({ data, isLoading, beforeData, handleOnVoyageChoose, bookingValue}) => {
     if(isLoading){
         return(
             <React.Fragment>
@@ -22,7 +32,7 @@ const VoyageCard = ({ data, isLoading, beforeData, handleOnVoyageChoose, booking
     else{
         return(
             <React.Fragment>
-                {data?.map((voyage : any , index : number) => (
+                {data?.map((voyage : IVoyage , index : number) => (
                     <Card 
                         key={index} 
                         className={`h-full w-full relative ${bookingValue?.voyage.voyage_code === voyage.voyage_code ? 'ring ring-blue-100' : null}`} 
@@ -66,7 +76,7 @@ const Voyages = () => {
     const handleOnVoyageChoose = (event: any) => {
         const voyage : any = JSON.parse(event.target.value);
 
-        setBookingValue((prev: any) => ({
+        setBookingValue((prev: IBookingValue) => ({
             ...prev,
             itineraries: null,
             voyage
@@ -76,7 +86,7 @@ const Voyages = () => {
     }
 
     return (
-            <VoyageCard beforeData={beforeData} data={data} isLoading={isLoading} handleOnVoyageChoose={handleOnVoyageChoose} bookingValue={bookingValue}/>
+        <VoyageCard beforeData={beforeData} data={data} isLoading={isLoading} handleOnVoyageChoose={handleOnVoyageChoose} bookingValue={bookingValue}/>
     )
 }
 

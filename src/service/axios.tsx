@@ -8,7 +8,7 @@ export const axiosDefaults = new ApiRequestBuilder()
   .setTimeout(5000)
   .setHeaders({ Accept: "application/json" })
 
-export const Api = axios.create(axiosDefaults
+const Api = axios.create(axiosDefaults
     .build());
 
 Api.interceptors.request.use(
@@ -36,4 +36,4 @@ Api.interceptors.response.use(
   }
 );
 
-export default { Api };
+export { Api };

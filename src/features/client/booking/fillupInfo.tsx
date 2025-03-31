@@ -7,6 +7,8 @@ import { NumberInput } from "@heroui/number-input";
 import { Spacer } from "@heroui/spacer";
 import { useBookingContext } from "@/context/bookingContextProvider";
 
+import { IBookingValue } from '@/context/bookingContextProvider'
+
 const contactNumberRegex = /^[0-9]{11}$/;
 
 const AdditionalFeeRadio = (props: any) => {
@@ -349,7 +351,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
 const FillupInfo = () => {
   const { bookingValue, setBookingValue } = useBookingContext();
   const handleOnInputChange = (value: any, name: string) => {
-    setBookingValue((prev: any) => ({
+    setBookingValue((prev: IBookingValue) => ({
       ...prev,
       info: { ...prev?.info, [name]: value },
     }));

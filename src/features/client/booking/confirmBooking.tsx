@@ -18,7 +18,7 @@ const ConfirmBooking = () => {
           width={40}
         />
         <div className="flex flex-col">
-          <p className="text-md">{bookingValue?.booking_type?.name}</p>
+          <p className="text-md">{bookingValue?.voyage?.label} - {bookingValue?.booking_type?.name}</p>
           <p className="text-small text-default-500 uppercase">{bookingValue?.route?.transportation_type} - {bookingValue?.route?.label}</p>
         </div>
       </CardHeader>

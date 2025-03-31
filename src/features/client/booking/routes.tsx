@@ -6,33 +6,38 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
 import { Skeleton } from '@heroui/skeleton';
+import { IRoute } from "@/types/bookingTypes"
+import { IBookingValue } from '@/context/bookingContextProvider'
 
 const Routes = () => {
     
     const { setBookingValue, bookingValue } = useBookingContext()
 
-    const [transpoType, setTranspoType] = React.useState(bookingValue?.route?.transportation_type || null);
+    const [transpoType, setTranspoType] = React.useState<any | null>(bookingValue?.route?.transportation_type || null);
 
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),[])
+    
     const { data , error, isLoading } = useApiRequest(fetchVoyagesFromAPI);
     
-
     const handleSelectingTranspoType = (event : any) => {
-        setBookingValue((prev: any) => ({
+        setBookingValue((prev: IBookingValue) => ({
             ...prev,
             route: null
         }))
         setTranspoType(event.target.value)
     }
     const handleSelectingRoute = async (event : any) => {
-        const route = await data.find((route: any) => route.booking_route_code === event.target.value )
-        setBookingValue((prev: any) => ({
+        const route = await data.find((route: IRoute) => route.booking_route_code === event.target.value )
+        setBookingValue((prev: IBookingValue) => ({
             ...prev,
             fare: null,
             itineraries: null,
             route
         }))
     }
+
+    const isSelectionDisable = transpoType == "" || transpoType == null ? true : false
+
     if(error) return <div>Error: {error.message}</div>
 
     return (
@@ -56,14 +61,14 @@ const Routes = () => {
                 <div className='w-xs rounded-lg'>
                     <Select 
                         isRequired
-                        isDisabled={transpoType == "" || transpoType == null ? true : false}
+                        isDisabled={isSelectionDisable}
                         onChange={handleSelectingRoute}
                         label="Route" 
                         className="max-w-full"
                         items={data ? data.filter((route: any) => route.transportation_type === transpoType) : []}
                         defaultSelectedKeys={[bookingValue?.route?.booking_route_code]}
                     >
-                        {(route : any) => 
+                        {(route : IRoute) => 
                         <SelectItem key={route.booking_route_code} textValue={route.label}>
                             <div className='flex justify-between'>
                                 <Typography>{route.origin}</Typography>

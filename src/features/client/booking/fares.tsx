@@ -12,6 +12,9 @@ import {
 
 import { useBookingContext } from "@/context/bookingContextProvider";
 import { Spinner } from "@heroui/spinner";
+import { formatToPeso } from "@/helpers/formatToPeso";
+import { IFare } from "@/types/bookingTypes"
+import { IBookingValue } from '@/context/bookingContextProvider'
 
 const columns = [
   { key: "details", label: "DETAILS" },
@@ -19,12 +22,6 @@ const columns = [
   { key: "fare", label: "FARE" },
 ];
 
-const formatToPeso = (value: number) => {
-  return new Intl.NumberFormat("en-PH", {
-    style: "currency",
-    currency: "PHP",
-  }).format(value);
-};
 const Fares = () => {
   const { bookingValue, setBookingValue } = useBookingContext();
 
@@ -54,13 +51,15 @@ const Fares = () => {
         return cellValue;
     }
   };
+
   const handleFareChoose = (key: any) => {
     const fare = JSON.parse(key);
-    setBookingValue((prev: any) => ({
+    setBookingValue((prev: IBookingValue) => ({
       ...prev,
       fare,
     }));
   };
+  
   return (
     <div className="mt-10">
       
@@ -75,7 +74,7 @@ const Fares = () => {
           ]}
           maxTableHeight={300}>
           <TableHeader columns={columns}>
-            {(column: any) => (
+            {(column: {key: string, label: string}) => (
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
@@ -84,7 +83,7 @@ const Fares = () => {
             isLoading={isLoading}
             emptyContent={"No fair to display."}
             loadingContent={<Spinner label="Loading..." />}>
-            {(fare: any) => (
+            {(fare: IFare) => (
               <TableRow
                 key={fare.cargo_fare_matrices_code}
                 onClick={() => handleFareChoose(JSON.stringify(fare))}>

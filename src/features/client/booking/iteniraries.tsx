@@ -8,12 +8,15 @@ import { Skeleton } from "@heroui/skeleton";
 import { Spacer } from "@heroui/spacer";
 import React from "react";
 
+import { IJourney } from "@/types/bookingTypes"
+import { IBookingValue } from '@/context/bookingContextProvider'
+
 const Itineraries = () => {
   const { bookingValue, setBookingValue, dispatch } = useBookingContext();
+
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-  const fetchItenirariesFromAPI = React.useMemo(
-    () =>
-      new ApiRequestBuilder()
+
+  const fetchItenirariesFromAPI = React.useMemo(() => new ApiRequestBuilder()
         .setUrl("/client/bookingProcess/getJourneySchedules")
         .setMethod("POST")
         .setData({
@@ -29,8 +32,7 @@ const Itineraries = () => {
   if (error) return <div>Error: {error.message}</div>;
   const handleOnPress = (value: any) => {
     const itineraries: any = JSON.parse(value);
-
-    setBookingValue((prev: any) => ({
+    setBookingValue((prev: IBookingValue) => ({
       ...prev,
       itineraries
     }));
@@ -54,7 +56,7 @@ const Itineraries = () => {
               <Spacer y={4} />
             </React.Fragment>
           )))
-        : (data.data.map((itinerary: any) => (
+        : (data.data.map((itinerary: IJourney) => (
             <React.Fragment key={itinerary.itinerary_code}>
               <Card
                 className={`max-w-[900px] py-3 h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? 'ring ring-blue-100' : null}`}

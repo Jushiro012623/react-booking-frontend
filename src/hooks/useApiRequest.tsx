@@ -1,6 +1,6 @@
 import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
 import React from "react";
-import { Api } from "@/service/axios";
+import { Api as SendApiRequest } from "@/service/axios";
 
 const cache: Record<string, any> = {};
 
@@ -40,7 +40,7 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
             // if (data) config.data = data;
             // if (headers) config.headers = headers;
 
-            const response = await Api(builder.setSignal(abortController.signal).build())
+            const response = await SendApiRequest(builder.setSignal(abortController.signal).build())
 
             if (response.status >= 400) {
                 throw new Error('Network response was not ok');

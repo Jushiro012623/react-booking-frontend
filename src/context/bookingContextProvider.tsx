@@ -1,36 +1,34 @@
 import React from 'react'
-
+import { IFare, IVoyage, IJourney, IRoute, IBookingType } from '@/types/bookingTypes'
 interface IBookingContext {
     bookingValue: any;
     setBookingValue: (bookingValue: any) => void;
-    state: StepState;
+    state: IStepState;
     dispatch: React.Dispatch<any>;
     stepDetails: (state: any) => any
 }
-
-interface StepState {
+export interface IStepState {
   step: number;
   value: number;
 }
-
-const BookingContext = React.createContext<IBookingContext | undefined>(undefined)
-
-const initialState: any = { step: 1, value: 19 };
-
-const BookingContextReducer = (state: any, action: any) => {
-  switch(action.type){
-    case "NEXT":
-      return {step: Math.min(state.step + 1, 10), value: Math.min(state.value + 15, 100)}
-    case "BACK":
-      return {step: Math.max(state.step - initialState.step, initialState.step), value: Math.max(state.value - initialState.value, initialState.value)}
-    case "NONE":
-      return {...state}
-    default:
-      return state
-  }
+interface IStepDetails {
+    errorMessage: string;
+    title: string;
+    subtitle: string;
+    stepProgress: string;
+}
+export interface IBookingValue {
+    fare: IFare;
+    voyage: IVoyage;
+    route: IRoute
+    itineraries: IJourney
+    info: any;
+    booking_type: IBookingType
 }
 
-const stepDetails = (state : any) => {
+const initialState: IStepState = { step: 1, value: 0 };
+
+const stepDetails = (state : { step: number }):  IStepDetails => {
     switch(state.step){
         case 1:
             return { errorMessage: "Please select a voyage.", title:"Where would you like to board with us?", subtitle: "Select your preferred voyage to begin.", stepProgress: "Let's Begin" }
@@ -51,9 +49,24 @@ const stepDetails = (state : any) => {
     }
 }
 
+const BookingContextReducer = (state: IStepState, action: any) => {
+  switch(action.type){
+    case "NEXT":
+      return {step: Math.min(state.step + 1, 7), value: Math.min(state.value + 16.66666666666667, 100)}
+    case "BACK":
+      return {step: Math.max(state.step - initialState.step, initialState.step), value: Math.max(state.value - 16.66666666666667, initialState.value)}
+    case "NONE":
+      return {...state}
+    default: 
+      return state
+  }
+}
+
+const BookingContext = React.createContext<IBookingContext | undefined>(undefined)
+
 const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
 
-    const [bookingValue, setBookingValue] = React.useState<any>(null)
+    const [bookingValue, setBookingValue] = React.useState<IBookingValue | null>(null)
     const [state, dispatch] = React.useReducer(BookingContextReducer, initialState)
 
     const contextValue = React.useMemo(() => ({
@@ -66,7 +79,7 @@ const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
     
   return (
     <BookingContext.Provider value={contextValue}>
-        {children}
+        { children }
     </BookingContext.Provider>
   )
 }
