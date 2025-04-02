@@ -321,7 +321,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
       <Spacer x={5} y={5} />
       <NumberInput
         defaultValue={1}
-        label="Passenger Quantity"
+        label="Item Quantity"
         placeholder="Enter Passenger Quantity"
         name="quantity"
         value={bookingValue?.info?.quantity}

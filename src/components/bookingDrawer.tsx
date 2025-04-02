@@ -53,9 +53,10 @@ const BookingDrawer = () => {
     }
     return "0%"
   }
+  
   return (
     <div className='absolute top-0 right-10'>
-        <Button onPress={onOpen}>View Summary</Button>
+        <Button onPress={onOpen} color='primary'>View Summary</Button>
         <Drawer isOpen={isOpen} onOpenChange={onOpenChange} size='xs'>
             <DrawerContent>
             {(onClose) => (

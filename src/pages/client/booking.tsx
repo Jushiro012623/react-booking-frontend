@@ -16,10 +16,8 @@ import BookingDrawer from '@/components/bookingDrawer';
 import FillupInfo from '@/features/client/booking/fillupInfo';
 import ConfirmBooking from '@/features/client/booking/confirmBooking';
 import React from 'react';
-import { Spinner } from "@heroui/spinner";
-import { Skeleton } from "@heroui/skeleton";
-
-
+import CompleteBooking from "@/features/client/booking/completeBooking";
+import { useDisclosure } from "@heroui/modal";
 
 const BookingStepContent = [
     {
@@ -54,10 +52,10 @@ const BookingStepContent = [
 ]
 const Booking = () => {
 
-    const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
+    const { state, dispatch, bookingValue, stepDetails, setBookingValue } = useBookingContext()
     const [ isBookingLoading, setIsBookingLoading ] = React.useState<boolean>(false)
-
-
+    const {onOpen, isOpen, onOpenChange} = useDisclosure();
+    const [bookingResponse, setBookingResponse] = React.useState<any>(null);
     const submitBookingRequest = React.useMemo(() =>{
         const payload = {
             ...valueToSubmit(bookingValue)
@@ -70,6 +68,15 @@ const Booking = () => {
 
     const handleOnNext = async () => {
         if(!canProceedToNextStep(state, bookingValue)){
+            addToast({
+                shouldShowTimeoutProgress: true,
+                timeout: 3000,
+                title: "Failed to next step",
+                description: stepDetails(state).errorMessage,
+                variant: 'flat',
+                color: "danger",
+            })
+            
             return dispatch({type: "NONE"})
         }
         if(state.step === 7){
@@ -85,11 +92,20 @@ const Booking = () => {
                         variant: 'flat',
                         color: "success",
                     })
-                    dispatch({type: "RESET"})
                 }
-                return dispatch({type: "RESET"})
-            } catch (error) {
-                return 
+                setBookingResponse(response.data)
+                return onOpen()
+                // return dispatch({type: "RESET"})
+            } catch (error: any) {
+                console.log(error)
+                return addToast({
+                    shouldShowTimeoutProgress: true,
+                    timeout: 3000,
+                    title: "Booking Error",
+                    description: error.response.data.message,
+                    variant: 'flat',
+                    color: "danger",
+                })
             }finally{
                 setIsBookingLoading(false)
             }
@@ -126,13 +142,13 @@ const Booking = () => {
                 </div>
 
                 <Typography variant='h3'>{stepDetails(state).title}</Typography>
-                <Typography variant='body2' className='italic'>{stepDetails(state).subtitle}</Typography>
-
+                <Typography variant='body2' color="primary" className='italic'>{stepDetails(state).subtitle}</Typography>
                 {BookingStepContent.map((content) => (
                     <React.Fragment key={content.step}>
                         {state.step === content.step && content.content}
                     </React.Fragment>                         
                 ))}
+                <CompleteBooking onOpenChange={onOpenChange} isOpen={isOpen} onOpen={onOpen} data={bookingResponse}/>
                 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button isDisabled={isBookingLoading} onPress={() => dispatch({type: "BACK"})}>Back</Button>
