@@ -59,7 +59,7 @@ const Itineraries = () => {
         : (data.data.map((itinerary: IJourney) => (
             <React.Fragment key={itinerary.itinerary_code}>
               <Card
-                className={`max-w-[900px] py-3 h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? 'ring ring-blue-100' : null}`}
+                className={`max-w-[900px] py-3 md:h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? 'ring ring-blue-100' : null}`}
                 fullWidth
                 isPressable
                 isHoverable
@@ -74,8 +74,8 @@ const Itineraries = () => {
                 </CardHeader>
                 <Divider />
                 <div className="px-3 py-3">
-                  <div className="flex justify-between w-full ">
-                    <div className="flex gap-x-2 text-xs">
+                  <div className="flex flex-col md:flex-row justify-between w-full ">
+                    <div className="flex gap-x-2  justify-between text-xs">
                       <p>Departure Date:</p>{" "}
                       <p>
                         {new Date(
@@ -83,18 +83,19 @@ const Itineraries = () => {
                         ).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex gap-x-2 text-xs">
+                    <div className="flex gap-x-2 justify-between text-xs">
                       <p>Departure Time:</p> <p>{itinerary.departure_time}</p>
                     </div>
                   </div>
-                  <div className="flex justify-between w-full mt-2">
-                    <div className="flex gap-x-2 text-xs">
+                <Spacer y={2}/>
+                  <div className="flex flex-col md:flex-row justify-between w-full mt-2">
+                    <div className="flex gap-x-2 justify-between text-xs">
                       <p>Arrival Date:</p>{" "}
                       <p>
                         {new Date(itinerary.arrival_date).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="flex gap-x-2 text-xs">
+                    <div className="flex gap-x-2 justify-between text-xs">
                       <p>Arrival Time:</p> <p>{itinerary.arrival_time}</p>
                     </div>
                   </div>

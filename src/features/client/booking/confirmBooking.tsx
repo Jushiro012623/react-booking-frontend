@@ -1,5 +1,7 @@
 import Typography from '@/components/ui/Typography'
 import { useBookingContext } from '@/context/bookingContextProvider'
+import { formatToPeso } from '@/helpers/formatToPeso'
+import { totalAmout } from '@/utils/bookingValidations'
 import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card'
 import { Divider } from '@heroui/divider'
 import { Image } from '@heroui/image'
@@ -25,8 +27,8 @@ const ConfirmBooking = () => {
       </CardHeader>
       <Divider />
       <CardBody>
-        <div className='flex w-full '>
-            <div className='w-full'>
+        <div className='flex w-full flex-col md:flex-row'>
+            <div className='w-full flex flex-col'>
                 <div className='flex w-full justify-between'>
                     <Typography variant='small' color='primary'>Departure Date</Typography>
                     <Typography variant='small'>{bookingValue?.itineraries?.departure_date}</Typography>
@@ -37,8 +39,8 @@ const ConfirmBooking = () => {
                     <Typography variant='small'>{bookingValue?.itineraries?.departure_time}</Typography>
                 </div>
             </div>
-            <Spacer x={5}/>
-            <div className='w-full'>
+            <Spacer x={5} y={2}/>
+            <div className='w-full flex flex-col'>
                 <div className='flex w-full justify-between'>
                     <Typography variant='small' color='primary'>Arrival Date</Typography>
                     <Typography variant='small'>{bookingValue?.itineraries?.arrival_date}</Typography>
@@ -66,14 +68,14 @@ const ConfirmBooking = () => {
             <Spacer y={2}/>
             <div className='w-full flex justify-between'>
                 <Typography variant='small'>Additional Fee</Typography>
-                <Typography variant='small'>{bookingValue?.fare?.additional_fee || '00.0'}</Typography>
+                <Typography variant='small'>{bookingValue?.info?.add_ons === 2 ? formatToPeso(bookingValue?.fare?.additional_fee || 0) : formatToPeso(0)}</Typography>
             </div>
             <Spacer y={2}/>
             <Divider />
             <Spacer y={1}/>
             <div className='w-full flex justify-between'>
                 <Typography  color='primary'>Total Amount</Typography>
-                <Typography>{bookingValue?.fare?.fare}</Typography>
+                <Typography>{totalAmout(bookingValue)}</Typography>
             </div>
         </div>
       </CardFooter>

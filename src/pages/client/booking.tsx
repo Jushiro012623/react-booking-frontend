@@ -52,7 +52,7 @@ const BookingStepContent = [
 ]
 const Booking = () => {
 
-    const { state, dispatch, bookingValue, stepDetails, setBookingValue } = useBookingContext()
+    const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
     const [ isBookingLoading, setIsBookingLoading ] = React.useState<boolean>(false)
     const {onOpen, isOpen, onOpenChange} = useDisclosure();
     const [bookingResponse, setBookingResponse] = React.useState<any>(null);
@@ -93,7 +93,7 @@ const Booking = () => {
                         color: "success",
                     })
                 }
-                setBookingResponse(response.data)
+                setBookingResponse(await response.data)
                 return onOpen()
                 // return dispatch({type: "RESET"})
             } catch (error: any) {
@@ -102,7 +102,7 @@ const Booking = () => {
                     shouldShowTimeoutProgress: true,
                     timeout: 3000,
                     title: "Booking Error",
-                    description: error.response.data.message,
+                    description: error?.response?.data?.message || 'Network Error',
                     variant: 'flat',
                     color: "danger",
                 })

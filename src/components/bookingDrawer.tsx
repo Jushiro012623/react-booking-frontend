@@ -5,55 +5,11 @@ import { useBookingContext } from '@/context/bookingContextProvider';
 import Typography from './ui/Typography';
 import { Divider } from '@heroui/divider';
 import { formatToPeso } from '@/helpers/formatToPeso'
+import { percentageValue, totalAmout } from '@/utils/bookingValidations';
 const BookingDrawer = () => {
     
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const { bookingValue } = useBookingContext()
-
-  const totalAmout = () => {
-    let baseFare = Number(bookingValue?.fare?.fare)
-
-    if(bookingValue?.booking_type?.id === 1){
-        baseFare = baseFare * (Number(bookingValue?.info?.quantity) || 1);
-    }
-
-    switch (bookingValue?.info?.discount) {
-        case "REGULAR":
-          break;
-        case "PWD_SENIOR":
-        case "MINOR":
-        case "STUDENT":
-          baseFare -= baseFare * 0.2;
-          break;
-        case "HALF_FARE":
-          baseFare -= baseFare * 0.5;
-          break;
-        default:
-          break;
-      }
-
-    if(bookingValue?.info?.add_ons === 2){
-
-        baseFare += Number(bookingValue?.fare?.additional_fee) ?? 0
-    }
-
-    return bookingValue?.fare?.fare ? formatToPeso(baseFare) : false
-
-  }
-
-  const percentageValue = () => {
-    if(!bookingValue?.info?.discount){
-        return false
-    }
-    if(bookingValue?.info?.discount === "PWD" || bookingValue?.info?.discount === 'MINOR' || bookingValue?.info?.discount === 'STUDENT'){
-        return "20%"
-    }
-    if(bookingValue?.info?.discount === "HALF_FARE" ){
-        return "50%"
-    }
-    return "0%"
-  }
-  
   return (
     <div className='absolute top-0 right-10'>
         <Button onPress={onOpen} color='primary'>View Summary</Button>
@@ -119,12 +75,12 @@ const BookingDrawer = () => {
                     <Divider className="my-1" />
                     <div className='w-full flex items-center justify-between'>
                         <Typography variant='small'>ADDITIONAL FEE</Typography>
-                        <Typography variant='small'>{bookingValue?.info?.add_ons ? formatToPeso(bookingValue?.fare?.additional_fee) : '----' }</Typography>
+                        <Typography variant='small'>{bookingValue?.info?.add_ons === 2 ? formatToPeso(bookingValue?.fare?.additional_fee) : formatToPeso(0) }</Typography>
                     </div>
                     <Divider className="my-1" />
                     <div className='w-full flex items-center justify-between'>
                         <Typography variant='small'>DISCOUNT</Typography>
-                        <Typography variant='small'>{percentageValue() || '----'}</Typography>
+                        <Typography variant='small'>{percentageValue(bookingValue) || '----'}</Typography>
                     </div>
                     <Divider className="my-1" />
                     <div className='w-full flex items-center justify-between'>
@@ -134,7 +90,7 @@ const BookingDrawer = () => {
                     <Divider className="my-1" />
                     <div className='w-full flex items-center justify-between mt-10'>
                         <Typography variant='h6' color='primary'>TOTAL AMOUNT</Typography>
-                        <Typography variant='small'>{totalAmout() || '----'}</Typography>
+                        <Typography variant='small'>{totalAmout(bookingValue) || '----'}</Typography>
                     </div>
                     <Divider className="my-1" />
                 </DrawerBody>
