@@ -7,7 +7,7 @@ import { NumberInput } from "@heroui/number-input";
 import { Spacer } from "@heroui/spacer";
 import { useBookingContext } from "@/context/bookingContextProvider";
 
-import { IBookingValue } from '@/context/bookingContextProvider'
+import { IBookingValue } from "@/context/bookingContextProvider";
 
 const contactNumberRegex = /^[0-9]{11}$/;
 
@@ -39,6 +39,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
     <React.Fragment>
       <div className="flex flex-col md:flex-row w-full">
         <Input
+          isRequired
           className="max-w-full"
           placeholder="Jonoh Nombeng"
           label="Full Name"
@@ -59,6 +60,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         />
         <Spacer x={5} y={5} />
         <Input
+          isRequired
           className="max-w-full"
           placeholder="09XX-XXXX-XXX"
           label="Contact Number"
@@ -86,6 +88,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
       <Spacer y={5} />
       <div className="flex flex-col md:flex-row w-full">
         <Select
+          isRequired
           className="grow"
           items={discounts}
           label="Discount"
@@ -100,6 +103,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         </Select>
         <Spacer x={5} y={5} />
         <NumberInput
+          isRequired
           defaultValue={1}
           label="Passenger Quantity"
           placeholder="Enter Passenger Quantity"
@@ -120,6 +124,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
 
       <Spacer y={5} />
       <RadioGroup
+        isRequired
         description="Select whether airconditioned or basic ride experience."
         defaultValue={bookingValue?.info?.add_ons}
         label="Add Ons"
@@ -141,6 +146,7 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
     <React.Fragment>
       <div className="flex flex-col md:flex-row w-full">
         <Input
+          isRequired
           className="max-w-full"
           placeholder="Jonoh Nombeng"
           label="Shipper Name"
@@ -159,6 +165,7 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
         />
         <Spacer x={5} y={5} />
         <Input
+          isRequired
           className="max-w-full"
           placeholder="09XX-XXXX-XXX"
           label="Contact Number"
@@ -186,6 +193,7 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
       <Spacer y={5} />
       <div className="flex flex-col md:flex-row w-full">
         <Input
+          isRequired
           className="max-w-full"
           placeholder="XXX-XXX-XXX"
           label="Plate Name"
@@ -228,6 +236,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
     <React.Fragment>
       <div className="flex flex-col md:flex-row w-full">
         <Input
+          isRequired
           className="max-w-full"
           placeholder="Jonoh Nombeng"
           label="Shipper Name"
@@ -249,6 +258,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         />
         <Spacer x={5} y={5} />
         <Input
+          isRequired
           className="max-w-full"
           placeholder="09XX-XXXX-XXX"
           label="Shipper Contact Number"
@@ -275,6 +285,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
       <Spacer y={5} />
       <div className="flex flex-col md:flex-row w-full">
         <Input
+          isRequired
           className="max-w-full"
           placeholder="Gol Downey"
           label="Receiver Name"
@@ -295,6 +306,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         />
         <Spacer x={5} y={5} />
         <Input
+          isRequired
           className="max-w-full"
           placeholder="09XX-XXXX-XXX"
           label="Receiver Contact Number"
@@ -320,6 +332,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
       </div>
       <Spacer x={5} y={5} />
       <NumberInput
+        isRequired
         defaultValue={1}
         label="Item Quantity"
         placeholder="Enter Passenger Quantity"
@@ -342,8 +355,10 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         label="Description"
         placeholder="Enter your item description"
         name="description"
-          value={bookingValue?.info?.description}
-          onValueChange={(value: any) => handleOnInputChange(value, 'description')}
+        value={bookingValue?.info?.description}
+        onValueChange={(value: any) =>
+          handleOnInputChange(value, "description")
+        }
       />
     </React.Fragment>
   );

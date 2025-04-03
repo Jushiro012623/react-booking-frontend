@@ -50,8 +50,8 @@ const BookingStepContent = [
    },
 
 ]
-const Booking = () => {
 
+const Booking = () => {
     const { state, dispatch, bookingValue, stepDetails } = useBookingContext()
     const [ isBookingLoading, setIsBookingLoading ] = React.useState<boolean>(false)
     const {onOpen, isOpen, onOpenChange} = useDisclosure();
@@ -152,7 +152,7 @@ const Booking = () => {
                 
                 <div className='flex gap-4 items-center mt-6'>
                     <Button isDisabled={isBookingLoading} onPress={() => dispatch({type: "BACK"})}>Back</Button>
-                    <Button isDisabled={isBookingLoading} isLoading={isBookingLoading} onPress={handleOnNext} color='primary'>{submitButtonContent()}</Button>
+                    <Button isDisabled={isBookingLoading} type={'submit'} isLoading={isBookingLoading} onPress={handleOnNext} color='primary'>{submitButtonContent()}</Button>
                 </div>
             </div>  
         </div>

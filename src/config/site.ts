@@ -40,7 +40,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com",
+    facebook: "https://facebook.com",
     twitter: "https://twitter.com",
     discord: "https://discord.gg",
   },

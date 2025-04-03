@@ -11,6 +11,7 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@heroui/navbar";
+import {  Dropdown,  DropdownTrigger,  DropdownMenu, DropdownItem } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar"
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
@@ -19,14 +20,16 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   TwitterIcon,
-  GithubIcon,
   DiscordIcon,
   HeartFilledIcon,
   SearchIcon,
+  FacebookIcon,
 } from "@/components/icons";
 import { Logo } from "@/components/icons";
+import { useAuthContext } from "@/context/authContextProvider";
 
 export const Navbar = () => {
+    const {token, user} = useAuthContext()
   const searchInput = (
     <Input
       aria-label="Search"
@@ -63,8 +66,9 @@ export const Navbar = () => {
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} isActive={item.label === 'Booking'}>
               <Link
+                isDisabled={item.label === 'About'}
                 className={clsx(
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium"
@@ -87,36 +91,62 @@ export const Navbar = () => {
           <Link isExternal href={siteConfig.links.twitter} title="Twitter">
             <TwitterIcon className="text-default-500" />
           </Link>
+          <Link isExternal href={siteConfig.links.facebook} title="Facebook">
+            <FacebookIcon className="text-default-500" />
+          </Link>
           <Link isExternal href={siteConfig.links.discord} title="Discord">
             <DiscordIcon className="text-default-500" />
           </Link>
-          <Link isExternal href={siteConfig.links.github} title="GitHub">
-            <GithubIcon className="text-default-500" />
-          </Link>
           <ThemeSwitch />
         </NavbarItem>
+        {token ? <>
+            <NavbarItem className="hidden lg:flex">
+                <Dropdown placement="bottom-end">
+                    <DropdownTrigger>
+                        <Avatar showFallback name="Ivan Allen" className="cursor-pointer"/>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Profile Actions" variant="flat">
+                    <DropdownItem key="profile" className="h-14 gap-2">
+                    <p className="font-semibold">Signed in as</p>
+                    <p className="font-semibold">{user.user.email}</p>
+                    </DropdownItem>
+                    <DropdownItem key="system">Profile</DropdownItem>
+                    <DropdownItem key="settings">Settings</DropdownItem>
+                    <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
+                    <DropdownItem key="logout" color="danger">
+                    Log Out
+                    </DropdownItem>
+                </DropdownMenu>
+
+                </Dropdown>
+            </NavbarItem>
+            <NavbarItem className="hidden md:flex">
+            <Button
+                as={Link}
+                className="text-sm font-normal text-default-600 bg-default-100"
+                href={siteConfig.booking}
+                startContent={<HeartFilledIcon className="text-danger" />}
+                variant="flat"
+            >
+                Book now
+            </Button>
+            </NavbarItem>
+        </> : 
+        <>
         <NavbarItem className="hidden lg:flex">
-            <Avatar showFallback name="Ivan Allen" className="cursor-pointer"/>
+          <Link href="/login">Login</Link>
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">
-          <Button
-            as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.booking}
-            startContent={<HeartFilledIcon className="text-danger" />}
-            variant="flat"
-          >
-            Book now
+        <NavbarItem>
+          <Button as={Link} color="primary" href="#" variant="flat">
+            Sign Up
           </Button>
         </NavbarItem>
+        </>}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
         <ThemeSwitch />
-        <NavbarMenuToggle />
+        {token && <NavbarMenuToggle />}
       </NavbarContent>
 
       <NavbarMenu>
