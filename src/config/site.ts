@@ -34,10 +34,6 @@ export const siteConfig = {
       label: "Help & Feedback",
       href: "/help-feedback",
     },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
   ],
   links: {
     facebook: "https://facebook.com",

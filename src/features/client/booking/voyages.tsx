@@ -5,8 +5,9 @@ import { Skeleton } from "@heroui/skeleton";
 import { Card } from "@heroui/card";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
-import { IVoyage } from "@/types/bookingTypes"
 import { IBookingValue } from '@/context/bookingContextProvider'
+import { TVoyage } from '@/models/voyages';
+
 interface IVoyageCardProps {
     data: any;
     isLoading: boolean;
@@ -32,7 +33,7 @@ const VoyageCard: React.FC<IVoyageCardProps> = ({ data, isLoading, beforeData, h
     else{
         return(
             <React.Fragment>
-                {data?.map((voyage : IVoyage , index : number) => (
+                {data?.map((voyage : TVoyage , index : number) => (
                     <Card 
                         key={index} 
                         className={`h-full w-full relative ${bookingValue?.voyage.voyage_code === voyage.voyage_code ? 'ring ring-blue-100' : null}`} 

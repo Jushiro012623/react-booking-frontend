@@ -1,67 +1,79 @@
-import { Api } from "@/service/apiRequest";
-import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
+import { TUser } from "@/models/user";
+import { loginApi, TResponse } from "@/service/apiRequest";
 import React from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
-interface User {
-  user: any;
-}
+type TAuthContext = {
+  user: TUser;
+  token: string | null;
+  loginUser: (data: { username: string; password: string }) => any;
+  logoutUser: () => void;
+  isLoggedIn: () => boolean;
+};
 
-interface AuthContextType {
-  token: string | undefined;
-  user: User;
-  login: (response: any) => void;
-  logout: () => void;
-}
-interface AuthContextProps {
-  children: React.ReactNode;
-}
-const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+type Props = { children: React.ReactNode };
 
-const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
+const AuthContext = React.createContext<TAuthContext>({} as TAuthContext);
+
+const AuthContextProvider: React.FC<Props> = ({ children }) => {
+  const navigate = useNavigate();
+
   const [cookies, setCookie, removeCookie] = useCookies(["_accessToken"]);
+  const [token, setToken] = React.useState<string | null>(null);
+  const [user, setUser] = React.useState<any>(null);
+  const [isReady, setIsReady] = React.useState(false);
 
-  const [user, setUser] = React.useState<User>({
-    user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") as string) : null
-  });
-  const [token, setToken] = React.useState(cookies._accessToken);
+  React.useEffect(() => {
+    const user = localStorage.getItem("user");
+    const token = cookies._accessToken;
+    if (user && token) {
+      setUser(JSON.parse(user));
+      setToken(token);
+    }
+    setIsReady(true);
+  }, []);
 
-  const memoizedToken = React.useMemo(() => token, [token]);
-
-  const login = async (data: any) => {
+  const loginUser = async (data: {username: string, password: string}) => {
     try {
-        const loginRequest = new ApiRequestBuilder()
-        .setUrl("auth/login")
-        .setMethod("POST")
-        .setData(data);
-        const response: any = await Api(loginRequest.build());
+      const response: TResponse = await loginApi(data);
 
-        if (response.status >= 400) throw new Error("Network response was not ok");
+      if (response.status >= 400)
+        throw new Error("Network response was not ok");
 
-        setToken(response.data.data.access_token);
-        setCookie("_accessToken", response.data.data.access_token, { path: "/" });
-        const _user = JSON.stringify(response.data.data.user);
-        localStorage.setItem("user", _user);
-        setUser({ user: _user });
+      const token: string | null = response.data.data.access_token;
+      const user: TUser = response.data.data.user;
+      const stringifyUser: string = JSON.stringify(user);
 
-        return response
+      setToken(token);
+      setCookie("_accessToken", token);
+
+      setUser(user);
+      localStorage.setItem("user", stringifyUser);
+
+      return response;
     } catch (error) {
-        throw error
+      throw error;
     }
   };
-  const logout = () => {
-    removeCookie("_accessToken");
+  const isLoggedIn = () => {
+    return !!user;
+  };
+  const logoutUser = () => {
     localStorage.removeItem("user");
-    setUser({ user: null });
+    setUser(null);
+    setToken("");
+    removeCookie("_accessToken");
+    navigate("/login");
   };
   return (
-    <AuthContext.Provider value={{ token: memoizedToken, user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ token, user, isLoggedIn, logoutUser, loginUser }}>
+       {isReady ? children : null}
     </AuthContext.Provider>
   );
 };
 
-export const useAuthContext = (): AuthContextType => {
+export const useAuthContext = (): TAuthContext => {
   const context = React.useContext(AuthContext);
   if (!context) {
     throw new Error(
@@ -69,6 +81,6 @@ export const useAuthContext = (): AuthContextType => {
     );
   }
   return context;
-};
+}
 
 export default AuthContextProvider;

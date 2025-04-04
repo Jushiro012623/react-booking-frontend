@@ -13,8 +13,8 @@ import {
 import { useBookingContext } from "@/context/bookingContextProvider";
 import { Spinner } from "@heroui/spinner";
 import { formatToPeso } from "@/helpers/formatToPeso";
-import { IFare } from "@/types/bookingTypes"
 import { IBookingValue } from '@/context/bookingContextProvider'
+import { TFare } from "@/models/fare";
 
 const columns = [
   { key: "details", label: "DETAILS" },
@@ -83,7 +83,7 @@ const Fares = () => {
             isLoading={isLoading}
             emptyContent={"No fair to display."}
             loadingContent={<Spinner label="Loading..." />}>
-            {(fare: IFare) => (
+            {(fare: TFare) => (
               <TableRow
                 key={fare.cargo_fare_matrices_code}
                 onClick={() => handleFareChoose(JSON.stringify(fare))}>

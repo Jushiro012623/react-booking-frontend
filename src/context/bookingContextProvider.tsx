@@ -1,5 +1,6 @@
 import React from 'react'
 import { IFare, IVoyage, IJourney, IRoute, IBookingType } from '@/types/bookingTypes'
+import { useAuthContext } from './authContextProvider';
 interface IBookingContext {
     bookingValue: any;
     setBookingValue: (bookingValue: any) => void;
@@ -68,8 +69,16 @@ const BookingContext = React.createContext<IBookingContext | undefined>(undefine
 
 const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
 
+    const {isLoggedIn, token} = useAuthContext()
     const [bookingValue, setBookingValue] = React.useState<IBookingValue | null>(null)
     const [state, dispatch] = React.useReducer(BookingContextReducer, initialState)
+
+    React.useEffect(() => {
+        if(isLoggedIn()){
+            setBookingValue(null)
+            dispatch({type: 'RESET'})
+        }
+    }, [token])
 
     const contextValue = React.useMemo(() => ({
         bookingValue, 

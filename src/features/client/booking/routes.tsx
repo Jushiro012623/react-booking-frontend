@@ -6,8 +6,8 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
 import { Skeleton } from '@heroui/skeleton';
-import { IRoute } from "@/types/bookingTypes"
 import { IBookingValue } from '@/context/bookingContextProvider'
+import { TRoute } from '@/models/routes';
 
 const Routes = () => {
     
@@ -27,7 +27,7 @@ const Routes = () => {
         setTranspoType(event.target.value)
     }
     const handleSelectingRoute = async (event : any) => {
-        const route = await data.find((route: IRoute) => route.booking_route_code === event.target.value )
+        const route = await data.find((route: TRoute) => route.booking_route_code === event.target.value )
         setBookingValue((prev: IBookingValue) => ({
             ...prev,
             fare: null,
@@ -68,7 +68,7 @@ const Routes = () => {
                         items={data ? data.filter((route: any) => route.transportation_type === transpoType) : []}
                         defaultSelectedKeys={[bookingValue?.route?.booking_route_code]}
                     >
-                        {(route : IRoute) => 
+                        {(route : TRoute) => 
                         <SelectItem key={route.booking_route_code} textValue={route.label}>
                             <div className='flex justify-between'>
                                 <Typography>{route.origin}</Typography>

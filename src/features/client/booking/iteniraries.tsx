@@ -7,9 +7,8 @@ import { Pagination } from "@heroui/pagination";
 import { Skeleton } from "@heroui/skeleton";
 import { Spacer } from "@heroui/spacer";
 import React from "react";
-
-import { IJourney } from "@/types/bookingTypes"
 import { IBookingValue } from '@/context/bookingContextProvider'
+import { TJourney } from "@/models/journey";
 
 const Itineraries = () => {
   const { bookingValue, setBookingValue, dispatch } = useBookingContext();
@@ -56,7 +55,7 @@ const Itineraries = () => {
               <Spacer y={4} />
             </React.Fragment>
           )))
-        : (data.data.map((itinerary: IJourney) => (
+        : (data.data.map((itinerary: TJourney) => (
             <React.Fragment key={itinerary.itinerary_code}>
               <Card
                 className={`max-w-[900px] py-3 md:h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? 'ring ring-blue-100' : null}`}

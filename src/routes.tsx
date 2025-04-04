@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import Loadable from "@/components/loadable";
 import Login from "@/pages/auth/login";
 import { useAuthContext } from "./context/authContextProvider";
+import NotFound from "./pages/notFound";
 
 const MainLayout = Loadable(React.lazy(() => import("@/layouts/mainLayout")));
 const IndexPage = Loadable(React.lazy(() => import("@/pages/client/index")));
@@ -18,7 +19,7 @@ function Routers() {
         <Route element={<IndexPage />} index />
         <Route element={<CompleteBooking />} path="booking/complete" />
 
-        <Route element={<ProtectedRoutes />}>
+        <Route element={<AuthRoutes />}>
           <Route element={<Booking />} path="booking" />
         </Route>
 
@@ -27,18 +28,19 @@ function Routers() {
       <Route element={<GuestRoutes />}>
         <Route element={<Login />} path="/login" />
       </Route>
+      <Route element={<NotFound />} path="*" />
     </Routes>
   );
 }
 
-const ProtectedRoutes = () => {
-  const user = useAuthContext();
-  if (!user.token) return <Navigate to="/login" />;
+const AuthRoutes = () => {
+  const { isLoggedIn } = useAuthContext();
+  if (!isLoggedIn()) return <Navigate to="/login" />;
   return <Outlet />;
 };
 const GuestRoutes = () => {
-  const user = useAuthContext();
-  if (!user.token) return <Outlet />;
+  const { isLoggedIn } = useAuthContext();
+  if (!isLoggedIn()) return <Outlet />;
   return <Navigate to="/" />;
 };
 

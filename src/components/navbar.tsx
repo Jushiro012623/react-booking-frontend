@@ -29,7 +29,7 @@ import { Logo } from "@/components/icons";
 import { useAuthContext } from "@/context/authContextProvider";
 
 export const Navbar = () => {
-    const {token, user} = useAuthContext()
+    const {isLoggedIn, user, logoutUser} = useAuthContext()
   const searchInput = (
     <Input
       aria-label="Search"
@@ -99,7 +99,7 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
-        {token ? <>
+        {isLoggedIn() ? <>
             <NavbarItem className="hidden lg:flex">
                 <Dropdown placement="bottom-end">
                     <DropdownTrigger>
@@ -108,12 +108,12 @@ export const Navbar = () => {
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
                     <DropdownItem key="profile" className="h-14 gap-2">
                     <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">{user.user.email}</p>
+                    <p className="font-semibold">{user.email}</p>
                     </DropdownItem>
                     <DropdownItem key="system">Profile</DropdownItem>
                     <DropdownItem key="settings">Settings</DropdownItem>
                     <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                    <DropdownItem key="logout" color="danger">
+                    <DropdownItem key="logout" color="danger" onPress={logoutUser}>
                     Log Out
                     </DropdownItem>
                 </DropdownMenu>
@@ -146,7 +146,7 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
-        {token && <NavbarMenuToggle />}
+        {isLoggedIn() && <NavbarMenuToggle />}
       </NavbarContent>
 
       <NavbarMenu>
@@ -158,9 +158,7 @@ export const Navbar = () => {
                 color={
                   index === 2
                     ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
+                    : 'foreground'
                 }
                 href="#"
                 size="lg"
@@ -169,6 +167,15 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
           ))}
+          <NavbarMenuItem>
+              <Link
+                onPress={logoutUser}
+                color={'danger'}
+                size="lg"
+              >
+                Logout
+              </Link>
+            </NavbarMenuItem>
         </div>
       </NavbarMenu>
     </HeroUINavbar>

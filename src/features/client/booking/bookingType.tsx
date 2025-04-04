@@ -2,8 +2,8 @@ import { Card } from "@heroui/card";
 import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
 import React from "react";
-import { IBookingType } from "@/types/bookingTypes"
 import { IBookingValue } from '@/context/bookingContextProvider'
+import { TBookingType } from "@/models/bookingType";
 
 const bookingTypes = [
     {id : 1, name : 'PASSENGER'},
@@ -30,7 +30,7 @@ const BookingType = () => {
 
     return (
         <React.Fragment>   
-            {bookingTypes?.map((bookingType : IBookingType) => (
+            {bookingTypes?.map((bookingType : TBookingType) => (
                 <Card key={bookingType.id} className={`h-full w-full ${bookingValue?.booking_type?.name === bookingType.name ? 'ring ring-blue-100' : null}`} isHoverable isPressable>
                     <label className='h-full w-full p-2 text-center flex flex-col justify-center gap-2  cursor-pointer'>
                         <Typography variant='h2' className='tracking-wider uppercase'>{bookingType.name}</Typography>
