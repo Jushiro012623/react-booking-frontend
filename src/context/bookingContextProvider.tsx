@@ -1,6 +1,10 @@
 import React from 'react'
-import { IFare, IVoyage, IJourney, IRoute, IBookingType } from '@/types/bookingTypes'
 import { useAuthContext } from './authContextProvider';
+import { TFare } from '@/models/fare';
+import { TVoyage } from '@/models/voyages';
+import { TRoute } from '@/models/routes';
+import { TJourney } from '@/models/journey';
+import { TBookingType } from '@/models/bookingType';
 interface IBookingContext {
     bookingValue: any;
     setBookingValue: (bookingValue: any) => void;
@@ -19,12 +23,12 @@ interface IStepDetails {
     stepProgress: string;
 }
 export interface IBookingValue {
-    fare: IFare;
-    voyage: IVoyage;
-    route: IRoute
-    itineraries: IJourney
+    fare: TFare;
+    voyage: TVoyage;
+    route: TRoute
+    itineraries: TJourney
     info: any;
-    booking_type: IBookingType
+    booking_type: TBookingType
 }
 
 const initialState: IStepState = { step: 1, value: 0 };

@@ -51,7 +51,7 @@ const Login = () => {
     <main className="flex items-center justify-center dark text-foreground bg-background h-screen">
       <div>
         <Form
-          className="w-96 flex items-center"
+          className="w-72 sm:w-96 flex items-center"
           onSubmit={handleOnSubmit}
           validationErrors={errors}>
           <Logo size={150} />

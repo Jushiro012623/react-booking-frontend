@@ -70,7 +70,7 @@ const Voyages = () => {
             return <div>Request was canceled</div>
         }
         console.log(error)
-        return <div>Error: {error.message}</div>
+        return <div>{error.message}</div>
     }
 
 
