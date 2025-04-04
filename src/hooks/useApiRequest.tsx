@@ -1,8 +1,6 @@
 import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
 import React from "react";
 import { Api as SendApiRequest } from "@/service/apiRequest";
-import { useAuthContext } from "@/context/authContextProvider";
-import { showToast } from "@/helpers/showToast";
 
 const cache: Record<string, any> = {};
 
@@ -13,7 +11,6 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
   const [responseData, setResponseData] = React.useState<any>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<any>(false);
-  const { logoutUser } = useAuthContext()
   const requestFromApi = React.useCallback(
     async (abortController: AbortController) => {
       if (!httpRequest.url) {
@@ -30,9 +27,9 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
         cached.expiry > Date.now()
       ) {
         setResponseData(cached.data);
-        console.log('refetch')
+        console.log("refetch");
         setIsLoading(false);
-        
+
         return;
       }
 
@@ -56,17 +53,8 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
           };
         }
         setResponseData(result);
-        
       } catch (error: any) {
-        if (error.name === "AbortError") {
-          console.log("Request was cancelled");
-          setError(error);
-        } else if (error?.response?.status === 401) {
-            showToast('Authenticaton expired', 'You have been logged out', 'danger')
-            logoutUser()
-        } else {
-          setError(error.message);
-        }
+        setError(error);
       } finally {
         setIsLoading(false);
       }
