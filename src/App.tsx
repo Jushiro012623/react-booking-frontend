@@ -1,9 +1,9 @@
-import Routers from "@/routes";
+import ReactRouters from "@/reactRoutes";
 
 
 function App() {
   return (
-    <Routers />
+    <ReactRouters />
   );
 }
 

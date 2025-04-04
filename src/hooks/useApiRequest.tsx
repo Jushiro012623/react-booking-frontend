@@ -30,7 +30,9 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
         cached.expiry > Date.now()
       ) {
         setResponseData(cached.data);
+        console.log('refetch')
         setIsLoading(false);
+        
         return;
       }
 
@@ -54,6 +56,7 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
           };
         }
         setResponseData(result);
+        
       } catch (error: any) {
         if (error.name === "AbortError") {
           console.log("Request was cancelled");

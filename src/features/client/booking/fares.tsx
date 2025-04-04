@@ -15,6 +15,7 @@ import { Spinner } from "@heroui/spinner";
 import { formatToPeso } from "@/helpers/formatToPeso";
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TFare } from "@/models/fare";
+import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 
 const columns = [
   { key: "details", label: "DETAILS" },
@@ -34,9 +35,9 @@ const Fares = () => {
     []
   );
 
-  const { data, error, isLoading } = useApiRequest(fetchFareMatrice);
+  const { data, error, isLoading, refetch} = useApiRequest(fetchFareMatrice);
 
-  if (error) return <div>Error: {error.message}</div>;
+  if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
   const renderCell = (fare: any, columnKey: any) => {
     const cellValue = fare[columnKey];

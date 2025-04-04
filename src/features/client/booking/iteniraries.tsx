@@ -9,6 +9,7 @@ import { Spacer } from "@heroui/spacer";
 import React from "react";
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TJourney } from "@/models/journey";
+import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 
 const Itineraries = () => {
   const { bookingValue, setBookingValue, dispatch } = useBookingContext();
@@ -27,8 +28,10 @@ const Itineraries = () => {
     [currentPage]
   );
 
-  const { data, error, isLoading } = useApiRequest(fetchItenirariesFromAPI);
-  if (error) return <div>Error: {error.message}</div>;
+  const { data, error, isLoading, refetch } = useApiRequest(fetchItenirariesFromAPI);
+
+  if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
+
   const handleOnPress = (value: any) => {
     const itineraries: any = JSON.parse(value);
     setBookingValue((prev: IBookingValue) => ({

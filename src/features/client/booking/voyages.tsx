@@ -7,6 +7,7 @@ import Typography from '@/components/ui/Typography';
 import { useBookingContext } from '@/context/bookingContextProvider';
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TVoyage } from '@/models/voyages';
+import ErrorFetchingBooking from '@/components/errorFetchingBooking';
 
 interface IVoyageCardProps {
     data: any;
@@ -60,19 +61,11 @@ const Voyages = () => {
         .setUrl('/client/bookingProcess/getVoyagesList')
     ,[])
     
-    const { data , error, isLoading } = useApiRequest(fetchVoyagesFromAPI);
+    const { data , error, isLoading, refetch } = useApiRequest(fetchVoyagesFromAPI);
 
     const beforeData = isLoading ? 3 : data?.length || 3;
 
-    if(error) {
-        if(error === 'canceled'){
-            console.log(error)
-            return <div>Request was canceled</div>
-        }
-        console.log(error)
-        return <div>{error.message}</div>
-    }
-
+    if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
     const handleOnVoyageChoose = (event: any) => {
         const voyage : any = JSON.parse(event.target.value);

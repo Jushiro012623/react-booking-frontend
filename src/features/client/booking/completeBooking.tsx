@@ -16,6 +16,7 @@ const CompleteBooking = ({isOpen, onOpenChange, data}: any) => {
         onClose()
         setBookingValue(null)
     }
+
   return (
     <React.Fragment>
         <Modal

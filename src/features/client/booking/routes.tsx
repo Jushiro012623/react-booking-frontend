@@ -8,6 +8,7 @@ import { useBookingContext } from '@/context/bookingContextProvider';
 import { Skeleton } from '@heroui/skeleton';
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TRoute } from '@/models/routes';
+import ErrorFetchingBooking from '@/components/errorFetchingBooking';
 
 const Routes = () => {
     
@@ -17,7 +18,7 @@ const Routes = () => {
 
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),[])
     
-    const { data , error, isLoading } = useApiRequest(fetchVoyagesFromAPI);
+    const { data , error, isLoading,refetch } = useApiRequest(fetchVoyagesFromAPI);
     
     const handleSelectingTranspoType = (event : any) => {
         setBookingValue((prev: IBookingValue) => ({
@@ -38,7 +39,7 @@ const Routes = () => {
 
     const isSelectionDisable = transpoType == "" || transpoType == null ? true : false
 
-    if(error) return <div>Error: {error.message}</div>
+    if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
     return (
         <React.Fragment>
