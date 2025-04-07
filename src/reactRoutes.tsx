@@ -12,16 +12,22 @@ const Booking = Loadable(React.lazy(() => import("@/pages/client/booking")));
 function ReactRouters() {
   return (
     <Routes>
+
       <Route element={<MainLayout />} path="/">
         <Route element={<IndexPage />} index />
+
         <Route element={<AuthRoutes />}>
           <Route element={<Booking />} path="booking" />
         </Route>
+        
       </Route>
+
       <Route element={<GuestRoutes />}>
         <Route element={<Login />} path="/login" />
       </Route>
+
       <Route element={<NotFound />} path="*" />
+
     </Routes>
   );
 }

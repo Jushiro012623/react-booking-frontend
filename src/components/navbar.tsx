@@ -32,9 +32,6 @@ import {
 } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import { useAuthContext } from "@/context/authContextProvider";
-import LogoutModal from "./logoutModal";
-import React from "react";
-
 export const Navbar = () => {
   const { isLoggedIn, user, logoutUser } = useAuthContext();
   const searchInput = (
