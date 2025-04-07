@@ -13,9 +13,10 @@ import {
 import { useBookingContext } from "@/context/bookingContextProvider";
 import { Spinner } from "@heroui/spinner";
 import { formatToPeso } from "@/helpers/formatToPeso";
-import { IBookingValue } from '@/context/bookingContextProvider'
+import { IBookingValue } from "@/context/bookingContextProvider";
 import { TFare } from "@/models/fare";
 import ErrorFetchingBooking from "@/components/errorFetchingBooking";
+import LogoutModal from "@/components/logoutModal";
 
 const columns = [
   { key: "details", label: "DETAILS" },
@@ -35,9 +36,19 @@ const Fares = () => {
     []
   );
 
-  const { data, error, isLoading, refetch} = useApiRequest(fetchFareMatrice);
-
-  if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
+  const { data, error, isLoading, refetch } = useApiRequest(fetchFareMatrice);
+  
+  if (error?.response?.status === 401) {
+    return (
+      <LogoutModal
+        title="You've Been Logged Out"
+        body={error?.response?.data.message}
+        className="px-10"
+      />
+    );
+  }
+  if (error)
+    return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
   const renderCell = (fare: any, columnKey: any) => {
     const cellValue = fare[columnKey];
@@ -60,43 +71,42 @@ const Fares = () => {
       fare,
     }));
   };
-  
+
   return (
     <div className="mt-10">
-      
-        <Table
-          isVirtualized
-          color="primary"
-          aria-label="Fare Matrices Table"
-          selectionMode="multiple"
-          selectionBehavior="replace"
-          defaultSelectedKeys={[
-            bookingValue?.fare?.cargo_fare_matrices_code ?? "",
-          ]}
-          maxTableHeight={300}>
-          <TableHeader columns={columns}>
-            {(column: {key: string, label: string}) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
-            )}
-          </TableHeader>
-          <TableBody
-            items={data ?? []}
-            isLoading={isLoading}
-            emptyContent={"No fair to display."}
-            loadingContent={<Spinner label="Loading..." />}>
-            {(fare: TFare) => (
-              <TableRow
-                key={fare.cargo_fare_matrices_code}
-                onClick={() => handleFareChoose(JSON.stringify(fare))}>
-                {(columnKey) => (
-                  <TableCell className="cursor-pointer">
-                    {renderCell(fare, columnKey)}
-                  </TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+      <Table
+        isVirtualized
+        color="primary"
+        aria-label="Fare Matrices Table"
+        selectionMode="multiple"
+        selectionBehavior="replace"
+        defaultSelectedKeys={[
+          bookingValue?.fare?.cargo_fare_matrices_code ?? "",
+        ]}
+        maxTableHeight={300}>
+        <TableHeader columns={columns}>
+          {(column: { key: string; label: string }) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          items={data ?? []}
+          isLoading={isLoading}
+          emptyContent={"No fair to display."}
+          loadingContent={<Spinner label="Loading..." />}>
+          {(fare: TFare) => (
+            <TableRow
+              key={fare.cargo_fare_matrices_code}
+              onClick={() => handleFareChoose(JSON.stringify(fare))}>
+              {(columnKey) => (
+                <TableCell className="cursor-pointer">
+                  {renderCell(fare, columnKey)}
+                </TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 };

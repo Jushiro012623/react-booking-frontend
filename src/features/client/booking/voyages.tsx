@@ -8,6 +8,7 @@ import { useBookingContext } from '@/context/bookingContextProvider';
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TVoyage } from '@/models/voyages';
 import ErrorFetchingBooking from '@/components/errorFetchingBooking';
+import LogoutModal from '@/components/logoutModal';
 
 interface IVoyageCardProps {
     data: any;
@@ -64,9 +65,13 @@ const Voyages = () => {
     const { data , error, isLoading, refetch } = useApiRequest(fetchVoyagesFromAPI);
 
     const beforeData = isLoading ? 3 : data?.length || 3;
+    
+    if(error?.response?.status === 401){
+        return <LogoutModal title="You've Been Logged Out" body={error?.response?.data.message} className="px-10"/>
+    }
 
     if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
-
+    
     const handleOnVoyageChoose = (event: any) => {
         const voyage : any = JSON.parse(event.target.value);
 

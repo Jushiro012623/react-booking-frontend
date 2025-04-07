@@ -21,6 +21,7 @@ import React from "react";
 import CompleteBooking from "@/features/client/booking/completeBooking";
 import { useDisclosure } from "@heroui/modal";
 import { showToast } from "@/helpers/showToast";
+import { useAuthContext } from "@/context/authContextProvider";
 
 const BookingStepContent = [
   {
@@ -67,6 +68,7 @@ const Booking = () => {
   const [isBookingLoading, setIsBookingLoading] =
     React.useState<boolean>(false);
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
+  const {logoutUser} = useAuthContext();
   const [bookingResponse, setBookingResponse] = React.useState<any>(null);
   const submitBookingRequest = React.useMemo(() => {
     const payload = {
@@ -104,20 +106,18 @@ const Booking = () => {
         return onOpen();
         // return dispatch({type: "RESET"})
       } catch (error: any) {
-        console.log(error);
         showToast(
           "Booking Error",
           error?.response?.data?.message || "Network Error",
           "danger"
         );
+        logoutUser()
       } finally {
         setIsBookingLoading(false);
       }
     }
     return dispatch({ type: "NEXT" });
   };
-
-  console.log(bookingValue);
 
   const submitButtonContent = () => {
     if (isBookingLoading) {
@@ -168,11 +168,11 @@ const Booking = () => {
         />
 
         <div className="flex gap-4 items-center mt-6">
-          <Button
+          {state.step !== 1 && <Button
             isDisabled={isBookingLoading}
             onPress={() => dispatch({ type: "BACK" })}>
             Back
-          </Button>
+          </Button>}
           <Button
             isDisabled={isBookingLoading}
             type={"submit"}

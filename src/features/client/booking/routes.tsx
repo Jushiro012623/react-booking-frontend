@@ -9,6 +9,7 @@ import { Skeleton } from '@heroui/skeleton';
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TRoute } from '@/models/routes';
 import ErrorFetchingBooking from '@/components/errorFetchingBooking';
+import LogoutModal from '@/components/logoutModal';
 
 const Routes = () => {
     
@@ -38,7 +39,10 @@ const Routes = () => {
     }
 
     const isSelectionDisable = transpoType == "" || transpoType == null ? true : false
-
+    
+    if(error?.response?.status === 401){
+        return <LogoutModal title="You've Been Logged Out" body={error?.response?.data.message} className="px-10"/>
+    }
     if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
     return (

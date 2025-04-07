@@ -11,8 +11,13 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import {  Dropdown,  DropdownTrigger,  DropdownMenu, DropdownItem } from "@heroui/dropdown";
-import { Avatar } from "@heroui/avatar"
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/dropdown";
+import { Avatar } from "@heroui/avatar";
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
 
@@ -27,9 +32,11 @@ import {
 } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import { useAuthContext } from "@/context/authContextProvider";
+import LogoutModal from "./logoutModal";
+import React from "react";
 
 export const Navbar = () => {
-    const {isLoggedIn, user, logoutUser} = useAuthContext()
+  const { isLoggedIn, user, logoutUser } = useAuthContext();
   const searchInput = (
     <Input
       aria-label="Search"
@@ -50,7 +57,6 @@ export const Navbar = () => {
       type="search"
     />
   );
-
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -58,24 +64,22 @@ export const Navbar = () => {
           <Link
             className="flex justify-start items-center gap-1"
             color="foreground"
-            href="/"
-          >
+            href="/">
             <Logo />
             <p className="font-bold text-inherit">CARGO</p>
           </Link>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href} isActive={item.label === 'Booking'}>
+            <NavbarItem key={item.href} isActive={item.label === "Booking"}>
               <Link
-                isDisabled={item.label === 'About'}
+                isDisabled={item.label === "About"}
                 className={clsx(
                   linkStyles({ color: "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
-                href={item.href}
-              >
+                href={item.href}>
                 {item.label}
               </Link>
             </NavbarItem>
@@ -85,8 +89,7 @@ export const Navbar = () => {
 
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+        justify="end">
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal href={siteConfig.links.twitter} title="Twitter">
             <TwitterIcon className="text-default-500" />
@@ -99,49 +102,59 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch />
         </NavbarItem>
-        {isLoggedIn() ? <>
+        {isLoggedIn() ? (
+          <>
             <NavbarItem className="hidden lg:flex">
-                <Dropdown placement="bottom-end">
-                    <DropdownTrigger>
-                        <Avatar showFallback name="Ivan Allen" className="cursor-pointer"/>
-                    </DropdownTrigger>
-                    <DropdownMenu aria-label="Profile Actions" variant="flat">
-                    <DropdownItem key="profile" className="h-14 gap-2">
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                  <Avatar
+                    showFallback
+                    name={user.username}
+                    className="cursor-pointer uppercase"
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                  <DropdownItem key="profile" className="h-14 gap-2">
                     <p className="font-semibold">Signed in as</p>
                     <p className="font-semibold">{user.email}</p>
-                    </DropdownItem>
-                    <DropdownItem key="system">Profile</DropdownItem>
-                    <DropdownItem key="settings">Settings</DropdownItem>
-                    <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-                    <DropdownItem key="logout" color="danger" onPress={logoutUser}>
+                  </DropdownItem>
+                  <DropdownItem key="system">Profile</DropdownItem>
+                  <DropdownItem key="settings">Settings</DropdownItem>
+                  <DropdownItem key="help_and_feedback">
+                    Help & Feedback
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    color="danger"
+                    onPress={logoutUser}>
                     Log Out
-                    </DropdownItem>
+                  </DropdownItem>
                 </DropdownMenu>
-
-                </Dropdown>
+              </Dropdown>
             </NavbarItem>
             <NavbarItem className="hidden md:flex">
-            <Button
+              <Button
                 as={Link}
                 className="text-sm font-normal text-default-600 bg-default-100"
                 href={siteConfig.booking}
                 startContent={<HeartFilledIcon className="text-danger" />}
-                variant="flat"
-            >
+                variant="flat">
                 Book now
-            </Button>
+              </Button>
             </NavbarItem>
-        </> : 
-        <>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/login">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-        </>}
+          </>
+        ) : (
+          <>
+            <NavbarItem className="hidden lg:flex">
+              <Link href="/login">Login</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button as={Link} color="primary" href="#" variant="flat">
+                Sign Up
+              </Button>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -155,27 +168,18 @@ export const Navbar = () => {
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : 'foreground'
-                }
+                color={index === 2 ? "primary" : "foreground"}
                 href="#"
-                size="lg"
-              >
+                size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
           <NavbarMenuItem>
-              <Link
-                onPress={logoutUser}
-                color={'danger'}
-                size="lg"
-              >
-                Logout
-              </Link>
-            </NavbarMenuItem>
+            <Link onPress={logoutUser} color={"danger"} size="lg">
+              Logout
+            </Link>
+          </NavbarMenuItem>
         </div>
       </NavbarMenu>
     </HeroUINavbar>
