@@ -111,7 +111,9 @@ const Booking = () => {
           error?.response?.data?.message || "Network Error",
           "danger"
         );
-        logoutUser()
+        if(error?.response?.status === 401){
+            logoutUser()
+        }
       } finally {
         setIsBookingLoading(false);
       }

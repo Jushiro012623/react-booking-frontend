@@ -1,5 +1,5 @@
 import { TUser } from "@/models/user";
-import { loginApi, TResponse } from "@/service/apiRequest";
+import { fetchUser, loginApi, TResponse } from "@/service/apiRequest";
 import React from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,9 @@ type TAuthContext = {
   token: string | null;
   loginUser: (data: { username: string; password: string }) => any;
   logoutUser: () => void;
+  fetchUserData: () => void;
   isLoggedIn: () => boolean;
+  isValidated: boolean;
 };
 
 type Props = { children: React.ReactNode };
@@ -23,6 +25,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   const [token, setToken] = React.useState<string | null>(null);
   const [user, setUser] = React.useState<any>(null);
   const [isReady, setIsReady] = React.useState(false);
+  const [isValidated, setIsValidated] = React.useState(false);
 
   React.useEffect(() => {
     const user = localStorage.getItem("user");
@@ -34,7 +37,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     setIsReady(true);
   }, []);
 
-  const loginUser = async (data: {username: string, password: string}) => {
+  const loginUser = async (data: { username: string; password: string }) => {
     try {
       const response: TResponse = await loginApi(data);
 
@@ -57,7 +60,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     }
   };
   const isLoggedIn = () => {
-    return !!user;
+    return !!user && !!token;
   };
   const logoutUser = () => {
     localStorage.removeItem("user");
@@ -66,9 +69,25 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     removeCookie("_accessToken");
     navigate("/login");
   };
+  const fetchUserData = async () => {
+    try {
+      const response = await fetchUser();
+      const user: any = response.data.data;
+      setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      setIsValidated(true);
+      return response;
+    } catch (error: any) {
+      setIsValidated(false);
+      if (error.response?.status === 401) {
+        logoutUser();
+      }
+    }
+  };
   return (
-    <AuthContext.Provider value={{ token, user, isLoggedIn, logoutUser, loginUser }}>
-       {isReady ? children : null}
+    <AuthContext.Provider
+      value={{ token, user, isLoggedIn, logoutUser, loginUser, fetchUserData, isValidated }}>
+      {isReady ? children : null}
     </AuthContext.Provider>
   );
 };
@@ -81,6 +100,6 @@ export const useAuthContext = (): TAuthContext => {
     );
   }
   return context;
-}
+};
 
 export default AuthContextProvider;

@@ -8,18 +8,15 @@ import NotFound from "./pages/notFound";
 const MainLayout = Loadable(React.lazy(() => import("@/layouts/mainLayout")));
 const IndexPage = Loadable(React.lazy(() => import("@/pages/client/index")));
 const Booking = Loadable(React.lazy(() => import("@/pages/client/booking")));
-
 function ReactRouters() {
   return (
     <Routes>
-
       <Route element={<MainLayout />} path="/">
         <Route element={<IndexPage />} index />
 
         <Route element={<AuthRoutes />}>
           <Route element={<Booking />} path="booking" />
         </Route>
-        
       </Route>
 
       <Route element={<GuestRoutes />}>
@@ -27,14 +24,30 @@ function ReactRouters() {
       </Route>
 
       <Route element={<NotFound />} path="*" />
-
     </Routes>
   );
 }
 
 const AuthRoutes = () => {
-  const { isLoggedIn } = useAuthContext();
-  if (!isLoggedIn()) return <Navigate to="/login" />;
+  const { isLoggedIn, fetchUserData, isValidated } = useAuthContext();
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const init = async () => {
+      try {
+        await fetchUserData();
+      } catch (e) {
+        // optionally redirect here
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
+  }, []);
+
+  if (loading) return
+
+  if (!isLoggedIn() && !isValidated) return <Navigate to="/login" />;
   return <Outlet />;
 };
 const GuestRoutes = () => {

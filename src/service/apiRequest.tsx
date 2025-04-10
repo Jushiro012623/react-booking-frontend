@@ -2,7 +2,6 @@ import axios from "axios";
 import { ApiRequestBuilder } from "./apiRequestBuilder";
 import { config as app } from "@/config/app";
 import { TUser } from "@/models/user";
-import Cookies from "js-cookie";
 type TToken = string | null | undefined;
 
 type TTokenResponse = {
@@ -31,7 +30,7 @@ const Api = axios.create(axiosDefaults.build());
 
 Api.interceptors.request.use(
   async (config: any) => {
-    const token: TToken = Cookies.get("_accessToken");
+    const token: TToken | null = getCookie("_accessToken");
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -65,4 +64,22 @@ const loginApi = async (data: {username: string, password: string}) => {
   return response;
 };
 
-export { Api, loginApi };
+const fetchUser = async () => {
+    const fetchSelf = axiosDefaults
+        .setMethod("POST")
+        .setUrl("auth/me");
+    
+    const response: TResponse = await Api(fetchSelf.build());
+    
+    if (response.status !== 200) throw new Error("Response was not ok");
+    
+    return response;
+}
+
+const getCookie = (name: string): string | null => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
+    return null;
+}
+export { Api, loginApi, fetchUser };
