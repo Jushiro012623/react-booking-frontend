@@ -4,7 +4,7 @@ import React from "react";
 import Typography from "./ui/Typography";
 import { useAuthContext } from "@/context/authContextProvider";
 
-const LogoutModal = ({title, body, className, canCancel = false}: any) => {
+const LogoutModal = ({title, body = "You've been logged out", className, canCancel = false}: any) => {
     
     const {onOpen, isOpen, onOpenChange} = useDisclosure();
     const { logoutUser } = useAuthContext();
@@ -13,7 +13,7 @@ const LogoutModal = ({title, body, className, canCancel = false}: any) => {
     },[]);
   return (
     <React.Fragment>
-      <Modal isOpen={isOpen} defaultOpen={true} onOpenChange={onOpenChange} isDismissable={false} hideCloseButton size="sm">
+      <Modal isOpen={isOpen} defaultOpen={true} onOpenChange={onOpenChange} isDismissable={false} hideCloseButton size="sm" backdrop="blur">
         <ModalContent>
           {(onClose) => (
             <>

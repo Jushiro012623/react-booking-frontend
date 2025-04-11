@@ -1,9 +1,15 @@
 import { TUser } from "@/models/user";
 import { fetchUser, loginApi, TResponse } from "@/service/apiRequest";
+import { getUserFromStorage, removeUserFromStorage, saveUserToStorage } from "@/utils/authStorage";
 import React from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
+/*
+    * 
+    * TYPES 
+    * 
+*/
 type TAuthContext = {
   user: TUser;
   token: string | null;
@@ -16,74 +22,98 @@ type TAuthContext = {
 
 type Props = { children: React.ReactNode };
 
+/*
+    * 
+    * REACT CREATE CONTEXT 
+    * 
+*/
+
 const AuthContext = React.createContext<TAuthContext>({} as TAuthContext);
 
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
-  const navigate = useNavigate();
+    
+    /*
+        * 
+        * REACT USE STATES 
+        * 
+    */
+    const [isReady, setIsReady] = React.useState(false);
+    const [isValidated, setIsValidated] = React.useState(false);
+    const [token, setToken] = React.useState<string | null>(null);
+    const [user, setUser] = React.useState<any>(null);
 
-  const [cookies, setCookie, removeCookie] = useCookies(["_accessToken"]);
-  const [token, setToken] = React.useState<string | null>(null);
-  const [user, setUser] = React.useState<any>(null);
-  const [isReady, setIsReady] = React.useState(false);
-  const [isValidated, setIsValidated] = React.useState(false);
+    /*
+        * 
+        * LIBRARY HOOKS / REACT ROUTER & REACT COOKIES
+        * 
+    */
+    const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(["_accessToken"]);
 
-  React.useEffect(() => {
-    const user = localStorage.getItem("user");
-    const token = cookies._accessToken;
-    if (user && token) {
-      setUser(JSON.parse(user));
-      setToken(token);
-    }
-    setIsReady(true);
-  }, []);
+    /*
+        * 
+        * REACT USE EFFECTS 
+        * 
+    */
+    React.useEffect(() => {
+        const user = getUserFromStorage();
+        const token = cookies._accessToken;
 
-  const loginUser = async (data: { username: string; password: string }) => {
-    try {
-      const response: TResponse = await loginApi(data);
+        if (user && token) {
+            setUser(user);
+            setToken(token);
+        }
+        setIsReady(true);
+    }, []);
 
-      if (response.status >= 400)
-        throw new Error("Network response was not ok");
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
+    const loginUser = async (data: { username: string; password: string }) => {
+        try {
+            const response: TResponse = await loginApi(data);
 
-      const token: string | null = response.data.data.access_token;
-      const user: TUser = response.data.data.user;
-      const stringifyUser: string = JSON.stringify(user);
+            if (response.status >= 400)
+                throw new Error("Network response was not ok");
 
-      setToken(token);
-      setCookie("_accessToken", token);
+            const token: string | null = response.data.data.access_token;
+            const user: TUser = response.data.data.user;
 
-      setUser(user);
-      localStorage.setItem("user", stringifyUser);
+            setToken(token);
+            setCookie("_accessToken", token);
 
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
-  const isLoggedIn = () => {
-    return !!user && !!token;
-  };
-  const logoutUser = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setToken("");
-    removeCookie("_accessToken");
-    navigate("/login");
-  };
-  const fetchUserData = async () => {
-    try {
-      const response = await fetchUser();
-      const user: any = response.data.data;
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      setIsValidated(true);
-      return response;
-    } catch (error: any) {
-      setIsValidated(false);
-      if (error.response?.status === 401) {
-        logoutUser();
-      }
-    }
-  };
+            setUser(user);
+            saveUserToStorage(user)
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const isLoggedIn = () => {
+        return !!user && !!token;
+    };
+
+    const logoutUser = () => {
+        removeUserFromStorage()
+        setUser(null);
+        setToken("");
+        removeCookie("_accessToken");
+        navigate("/login");
+    };
+
+    const fetchUserData = async () => {
+        const response = await fetchUser();
+        const user: any = response.data.data;
+        setUser(user);
+        saveUserToStorage(user)
+        setIsValidated(true);
+        return response;
+    };
+    
   return (
     <AuthContext.Provider
       value={{ token, user, isLoggedIn, logoutUser, loginUser, fetchUserData, isValidated }}>
@@ -91,6 +121,13 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+
+/*
+    * 
+    * CUSTOM CONTEXT 
+    * 
+*/
 
 export const useAuthContext = (): TAuthContext => {
   const context = React.useContext(AuthContext);

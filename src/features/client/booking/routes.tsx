@@ -13,14 +13,39 @@ import LogoutModal from '@/components/logoutModal';
 
 const Routes = () => {
     
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
     const { setBookingValue, bookingValue } = useBookingContext()
 
+    /*
+        * 
+        * REACT USE STATES 
+        * 
+    */
     const [transpoType, setTranspoType] = React.useState<any | null>(bookingValue?.route?.transportation_type || null);
 
+    /*
+        * 
+        * REACT MEMOS 
+        * 
+    */
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),[])
     
+    /*
+        * 
+        * CUSTOM HOOKS 
+        * 
+    */
     const { data , error, isLoading,refetch } = useApiRequest(fetchVoyagesFromAPI);
     
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
     const handleSelectingTranspoType = (event : any) => {
         setBookingValue((prev: IBookingValue) => ({
             ...prev,
@@ -40,6 +65,11 @@ const Routes = () => {
 
     const isSelectionDisable = transpoType == "" || transpoType == null ? true : false
     
+    /*
+        * 
+        * FETCHING HANDLERS 
+        * 
+    */
     if(error?.response?.status === 401){
         return <LogoutModal title="You've Been Logged Out" body={error?.response?.data.message} className="px-10"/>
     }

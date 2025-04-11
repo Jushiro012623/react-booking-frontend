@@ -8,6 +8,11 @@ import { Image } from '@heroui/image'
 import { Spacer } from '@heroui/spacer'
 
 const ConfirmBooking = () => {
+    /*
+        * 
+        * REACT CONTEXTS 
+        * 
+    */
     const { bookingValue} = useBookingContext()
   return (
     <div className="w-full flex flex-col mt-10">

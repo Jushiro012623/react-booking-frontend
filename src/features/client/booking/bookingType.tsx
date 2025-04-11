@@ -5,15 +5,32 @@ import React from "react";
 import { IBookingValue } from '@/context/bookingContextProvider'
 import { TBookingType } from "@/models/bookingType";
 
-const bookingTypes = [
+
+/*
+    * 
+    * MOCK BOOKING TYPE VALUES 
+    * 
+*/
+const BOOKING_TYPE = [
     {id : 1, name : 'PASSENGER'},
     {id : 2, name : 'ROLLING CARGO'},
     {id : 3, name : 'DROP CARGO'}
 ]
 
+
 const BookingType = () => {
+    /*
+        * 
+        * CUSTOM CONTEXT 
+        * 
+    */
     const { setBookingValue, dispatch, bookingValue } = useBookingContext()
 
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
     const handleOnBookingTypeChoose = (event: any) => {
         const booking_type : any = JSON.parse(event.target.value);
 
@@ -27,10 +44,10 @@ const BookingType = () => {
         
         dispatch({ type: "NEXT" })
     }
-
+    
     return (
         <React.Fragment>   
-            {bookingTypes?.map((bookingType : TBookingType) => (
+            {BOOKING_TYPE.map((bookingType : TBookingType) => (
                 <Card key={bookingType.id} className={`h-full w-full ${bookingValue?.booking_type?.name === bookingType.name ? 'ring ring-blue-100' : null}`} isHoverable isPressable>
                     <label className='h-full w-full p-2 text-center flex flex-col justify-center gap-2  cursor-pointer'>
                         <Typography variant='h2' className='tracking-wider uppercase'>{bookingType.name}</Typography>

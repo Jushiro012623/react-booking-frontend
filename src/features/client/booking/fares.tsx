@@ -18,59 +18,93 @@ import { TFare } from "@/models/fare";
 import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 import LogoutModal from "@/components/logoutModal";
 
-const columns = [
+/*
+    * 
+    * CONSTANTS 
+    * 
+*/
+const COLUMNS = [
   { key: "details", label: "DETAILS" },
   { key: "additional_fee", label: "ADDITIONAL_FEE" },
   { key: "fare", label: "FARE" },
 ];
 
 const Fares = () => {
-  const { bookingValue, setBookingValue } = useBookingContext();
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
+    const { bookingValue, setBookingValue } = useBookingContext();
 
-  const fetchFareMatrice = React.useMemo(
-    () =>
-      new ApiRequestBuilder()
-        .setUrl(`/client/bookingProcess/getFareMatrices`)
-        .addParam("booking_route_code", bookingValue?.route?.booking_route_code)
-        .addParam("booking_type", bookingValue?.booking_type.id),
-    []
-  );
-
-  const { data, error, isLoading, refetch } = useApiRequest(fetchFareMatrice);
-  
-  if (error?.response?.status === 401) {
-    return (
-      <LogoutModal
-        title="You've Been Logged Out"
-        body={error?.response?.data.message}
-        className="px-10"
-      />
+    /*
+        * 
+        * REACT USE MEMO 
+        * 
+    */
+    const fetchFareMatrice = React.useMemo(
+        () =>
+        new ApiRequestBuilder()
+            .setUrl(`/client/bookingProcess/getFareMatrices`)
+            .addParam("booking_route_code", bookingValue?.route?.booking_route_code)
+            .addParam("booking_type", bookingValue?.booking_type.id),
+        []
     );
-  }
-  if (error)
-    return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
-  const renderCell = (fare: any, columnKey: any) => {
-    const cellValue = fare[columnKey];
-    switch (columnKey) {
-      case "additional_fee":
+    /*
+        * 
+        * CUSTOM HOOKS 
+        * 
+    */
+    const { data, error, isLoading, refetch } = useApiRequest(fetchFareMatrice);
+  
+    /*
+        * 
+        * FETCHING HANDLERS 
+        * 
+    */
+    if (error?.response?.status === 401) {
         return (
-          <React.Fragment>{`${fare.additional_fee == 0 ? "-----" : `${formatToPeso(fare.additional_fee)}`}`}</React.Fragment>
+            <LogoutModal
+                title="You've Been Logged Out"
+                body={error?.response?.data.message}
+                className="px-10"
+            />
         );
-      case "fare":
-        return <React.Fragment>{formatToPeso(fare.fare)}</React.Fragment>;
-      default:
-        return cellValue;
     }
-  };
+    if (error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
-  const handleFareChoose = (key: any) => {
-    const fare = JSON.parse(key);
-    setBookingValue((prev: IBookingValue) => ({
-      ...prev,
-      fare,
-    }));
-  };
+    /*
+        * 
+        * HELPERS 
+        * 
+    */
+    const renderCell = (fare: any, columnKey: any) => {
+        const cellValue = fare[columnKey];
+        switch (columnKey) {
+        case "additional_fee":
+            return (
+            <React.Fragment>{`${fare.additional_fee == 0 ? "-----" : `${formatToPeso(fare.additional_fee)}`}`}</React.Fragment>
+            );
+        case "fare":
+            return <React.Fragment>{formatToPeso(fare.fare)}</React.Fragment>;
+        default:
+            return cellValue;
+        }
+    };
+
+    /*
+        * 
+        * BUTTON HANDLERS 
+        * 
+    */
+    const handleFareChoose = (key: any) => {
+        const fare = JSON.parse(key);
+        setBookingValue((prev: IBookingValue) => ({
+        ...prev,
+        fare,
+        }));
+    };
 
   return (
     <div className="mt-10">
@@ -84,7 +118,7 @@ const Fares = () => {
           bookingValue?.fare?.cargo_fare_matrices_code ?? "",
         ]}
         maxTableHeight={300}>
-        <TableHeader columns={columns}>
+        <TableHeader columns={COLUMNS}>
           {(column: { key: string; label: string }) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}

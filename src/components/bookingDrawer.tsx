@@ -8,8 +8,19 @@ import { formatToPeso } from '@/helpers/formatToPeso'
 import { percentageValue, totalAmout } from '@/utils/bookingValidations';
 const BookingDrawer = () => {
     
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const { bookingValue } = useBookingContext()
+    /*
+        * 
+        * HERO UI HOOKS 
+        * 
+    */
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    /*
+        * 
+        * CUSTOM CONTEXT 
+        * 
+    */
+    const { bookingValue } = useBookingContext()
+    
   return (
     <div className='absolute top-0 right-10'>
         <Button onPress={onOpen} color='primary'>View Summary</Button>

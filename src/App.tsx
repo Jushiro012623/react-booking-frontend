@@ -1,5 +1,4 @@
-import ReactRouters from "@/reactRoutes";
-
+import ReactRouters from "@/routes/mainRoutes";
 
 function App() {
   return (

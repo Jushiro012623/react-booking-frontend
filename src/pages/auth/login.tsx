@@ -11,41 +11,69 @@ import { Spacer } from "@heroui/spacer";
 import React from "react";
 
 const Login = () => {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<any>(null);
-  const { loginUser } = useAuthContext();
+    /*
+        * 
+        * REACT USE STATES 
+        * 
+    */
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+    const [errors, setErrors] = React.useState<any>(null);
+    /*
+        * 
+        * CUSTOM CONTEXT 
+        * 
+    */
+    const { loginUser } = useAuthContext();
 
-  const handleOnSubmit = async (event: any) => {
-    event.preventDefault();
-    const data: any = Object.fromEntries(new FormData(event.currentTarget));
-    try {
-      setIsLoading(true);
-      const response: any = await loginUser(data);
-      showToast("Login Successfully", response.data.message, "success");
-    } catch (error: any) {
-      if (error?.response?.data?.errors?.username) {
-        showToast(
-          "Login Failed",
-          error?.response?.data?.errors?.username[0],
-          "danger"
-        );
-        setErrors({ username: error?.response?.data?.errors?.username[0] });
-      } else if (error?.response?.data?.errors?.password) {
-        showToast(
-          "Login Failed",
-          error?.response?.data?.errors?.password[0],
-          "danger"
-        );
-        setErrors({ password: error?.response?.data?.errors?.password[0] });
-      } else {
-        const errorMessage =
-          error?.response?.data?.message || "An unexpected error occurred.";
-        showToast("Login Failed", errorMessage, "danger");
-      }
-    } finally {
-      setIsLoading(false);
+    /*
+        * 
+        * HELPERS 
+        * 
+    */
+    const attepmtToLogin = async (data: any) => {
+            const response: any = await loginUser(data);
+            showToast("Login Successfully", response.data.message, "success");
+            return response
     }
-  };
+    const catchAttemptLoginError = (error: any): void => {
+        if (error?.response?.data?.errors?.username) {
+            showToast(
+                "Login Failed",
+                error?.response?.data?.errors?.username[0],
+                "danger"
+            );
+            setErrors({ username: error?.response?.data?.errors?.username[0] });
+        } else if (error?.response?.data?.errors?.password) {
+            showToast(
+                "Login Failed",
+                error?.response?.data?.errors?.password[0],
+                "danger"
+            );
+            setErrors({ password: error?.response?.data?.errors?.password[0] });
+        } else {
+            const errorMessage =
+            error?.response?.data?.message || "An unexpected error occurred.";
+            showToast("Login Failed", errorMessage, "danger");
+        }
+    }
+
+    /*
+        * 
+        * BUTTON HANDLERS 
+        * 
+    */
+    const handleOnSubmit = async (event: any) => {
+        event.preventDefault();
+        const data: any = Object.fromEntries(new FormData(event.currentTarget));
+        try {
+            setIsLoading(true);
+            await attepmtToLogin(data);
+        } catch (error: any) {
+            catchAttemptLoginError(error)
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
   return (
     <main className="flex items-center justify-center dark text-foreground bg-background h-screen">

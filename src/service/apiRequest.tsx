@@ -2,6 +2,12 @@ import axios from "axios";
 import { ApiRequestBuilder } from "./apiRequestBuilder";
 import { config as app } from "@/config/app";
 import { TUser } from "@/models/user";
+
+/*
+    * 
+    * TYPES AND INTERFACES 
+    * 
+*/
 type TToken = string | null | undefined;
 
 type TTokenResponse = {
@@ -21,13 +27,31 @@ export type TResponse = {
   status: number;
 };
 
+/*
+    * 
+    * AXIOS DEFAULTS 
+    * 
+*/
 export const axiosDefaults = new ApiRequestBuilder()
   .setBaseUrl(app.apiUrl)
   .setTimeout(5000)
   .setHeaders({ Accept: "application/json" });
 
+/**
+    * 
+    * @param {ApiRequestBuilder} axiosDefaults.build - request config 
+    * @example
+    * const apiRequestBuilder = new ApiRequestBuilder().setUrl('/sample/url/').setMethod('POST')
+    * const response = await Api(apiRequestBuilder)
+    * 
+*/
 const Api = axios.create(axiosDefaults.build());
 
+/*
+    * 
+    * DO BEFORE THE REQUEST  
+    * 
+*/
 Api.interceptors.request.use(
   async (config: any) => {
     const token: TToken | null = getCookie("_accessToken");
@@ -42,6 +66,11 @@ Api.interceptors.request.use(
   }
 );
 
+/*
+    * 
+    * DO BEFORE RESPONSE 
+    * 
+*/
 Api.interceptors.response.use(
   (response) => {
     return response;
@@ -51,6 +80,20 @@ Api.interceptors.response.use(
   }
 );
 
+/*
+    * 
+    * API REQUEST 
+    * 
+*/
+/**
+    * 
+    * @description attempt to login user 
+    * @param {Object} data - user credentials {username, password} 
+    * @example 
+    * const data = {username: johndoe, password:iamjohndoe}
+    * await loginApi(data)
+    * 
+*/
 const loginApi = async (data: {username: string, password: string}) => {
   const loginRequest = axiosDefaults
     .setMethod("POST")
@@ -64,6 +107,13 @@ const loginApi = async (data: {username: string, password: string}) => {
   return response;
 };
 
+/**
+    * 
+    * @description fetch user data in api
+    * @example 
+    * await fetchUser()
+    * 
+*/
 const fetchUser = async () => {
     const fetchSelf = axiosDefaults
         .setMethod("POST")
@@ -76,6 +126,17 @@ const fetchUser = async () => {
     return response;
 }
 
+/*
+    * 
+    * HELPERS 
+    * 
+*/
+/**
+    * 
+    * @description get user token in cookies
+    * @param {string} name - name of cookies
+    * 
+*/
 const getCookie = (name: string): string | null => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

@@ -13,52 +13,81 @@ import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 import LogoutModal from "@/components/logoutModal";
 
 const Itineraries = () => {
-  const { bookingValue, setBookingValue, dispatch } = useBookingContext();
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
+    const { bookingValue, setBookingValue, dispatch } = useBookingContext();
 
-  const [currentPage, setCurrentPage] = React.useState<number>(1);
+    /*
+        * 
+        * REACT USE STATES
+        * 
+    */
+    const [currentPage, setCurrentPage] = React.useState<number>(1);
 
-  const fetchItenirariesFromAPI = React.useMemo(
-    () =>
-      new ApiRequestBuilder()
-        .setUrl("/client/bookingProcess/getJourneySchedules")
-        .setMethod("POST")
-        .setData({
-          voyage_code: bookingValue?.voyage?.voyage_code,
-          booking_route_code: bookingValue?.route?.booking_route_code,
-          booking_type: bookingValue?.booking_type?.id,
-        })
-        .addParam("page", currentPage),
-    [currentPage]
-  );
-
-  const { data, error, isLoading, refetch } = useApiRequest(
-    fetchItenirariesFromAPI
-  );
-  
-  if (error?.response?.status === 401) {
-    return (
-      <LogoutModal
-        title="You've Been Logged Out"
-        body={error?.response?.data.message}
-        className="px-10"
-      />
+    /*
+        * 
+        * REACT USE MEMO 
+        * 
+    */
+    const fetchItenirariesFromAPI = React.useMemo(
+        () =>
+        new ApiRequestBuilder()
+            .setUrl("/client/bookingProcess/getJourneySchedules")
+            .setMethod("POST")
+            .setData({
+            voyage_code: bookingValue?.voyage?.voyage_code,
+            booking_route_code: bookingValue?.route?.booking_route_code,
+            booking_type: bookingValue?.booking_type?.id,
+            })
+            .addParam("page", currentPage),
+        [currentPage]
     );
-  }
-  if (error)
-    return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
-  const handleOnPress = (value: any) => {
-    const itineraries: any = JSON.parse(value);
-    setBookingValue((prev: IBookingValue) => ({
-      ...prev,
-      itineraries,
-    }));
+    /*
+        * 
+        * CUSTOM HOOKS 
+        * 
+    */
+    const { data, error, isLoading, refetch } = useApiRequest(
+        fetchItenirariesFromAPI
+    );
+  
+    /*
+        * 
+        * FETCHING HANDLERS 
+        * 
+    */
+    if (error?.response?.status === 401) {
+        return (
+            <LogoutModal
+                title="You've Been Logged Out"
+                body={error?.response?.data.message}
+                className="px-10"
+            />
+        );
+    }
+    if (error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
 
-    dispatch({ type: "NEXT" });
-  };
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
+    const handleOnPress = (value: any) => {
+        const itineraries: any = JSON.parse(value);
+        setBookingValue((prev: IBookingValue) => ({
+        ...prev,
+        itineraries,
+        }));
+
+        dispatch({ type: "NEXT" });
+    };
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
   return (
     <div className="w-full flex flex-wrap gap-2 mt-10">

@@ -12,13 +12,13 @@ export const MainLoader = (Component: any) => (props: any) => (
   </React.Suspense>
 );
 
-const MainLoaderComponent = () => (
+export const MainLoaderComponent = () => (
   <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center">
     <HashLoader color="#b249f8" size={60} speedMultiplier={2} />
   </div>
 );
-const LoaderComponent = () => (
-  <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center">
+export const LoaderComponent = () => (
+  <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center z-50">
     <HashLoader color="#b249f8" size={60} speedMultiplier={2} />
   </div>
 );

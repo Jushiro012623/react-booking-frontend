@@ -17,7 +17,11 @@ interface IVoyageCardProps {
     handleOnVoyageChoose: (event: React.ChangeEvent<HTMLInputElement>) => void
     bookingValue: IBookingValue
 }
-
+/*
+    * 
+    * JSX COMPONENTS 
+    * 
+*/
 const VoyageCard: React.FC<IVoyageCardProps> = ({ data, isLoading, beforeData, handleOnVoyageChoose, bookingValue}) => {
     if(isLoading){
         return(
@@ -54,24 +58,54 @@ const VoyageCard: React.FC<IVoyageCardProps> = ({ data, isLoading, beforeData, h
     }
 }
 
+/*
+    * 
+    * MAIN PRESENTER 
+    * 
+*/
 const Voyages = () => {
 
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
     const { bookingValue, setBookingValue, dispatch } = useBookingContext()
 
+    /*
+        * 
+        * REACT USE MEMOS 
+        * 
+    */
     const fetchVoyagesFromAPI = React.useMemo(() => new ApiRequestBuilder()
         .setUrl('/client/bookingProcess/getVoyagesList')
     ,[])
     
+    /*
+        * 
+        * CUSTOM HOOKS 
+        * 
+    */
     const { data , error, isLoading, refetch } = useApiRequest(fetchVoyagesFromAPI);
 
     const beforeData = isLoading ? 3 : data?.length || 3;
     
+    /*
+        * 
+        * FETCHING HANDLERS 
+        * 
+    */
     if(error?.response?.status === 401){
         return <LogoutModal title="You've Been Logged Out" body={error?.response?.data.message} className="px-10"/>
     }
 
     if(error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
     
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
     const handleOnVoyageChoose = (event: any) => {
         const voyage : any = JSON.parse(event.target.value);
 

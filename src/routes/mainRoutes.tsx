@@ -1,13 +1,16 @@
 import React from "react";
-import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Loadable from "@/components/loadable";
 import Login from "@/pages/auth/login";
-import { useAuthContext } from "./context/authContextProvider";
-import NotFound from "./pages/notFound";
+import NotFound from "@/pages/notFound";
+import AuthRoutes from "@/routes/protectedRoute";
+import GuestRoutes from "@/routes/guestRoute";
 
 const MainLayout = Loadable(React.lazy(() => import("@/layouts/mainLayout")));
 const IndexPage = Loadable(React.lazy(() => import("@/pages/client/index")));
 const Booking = Loadable(React.lazy(() => import("@/pages/client/booking")));
+
+
 function ReactRouters() {
   return (
     <Routes>
@@ -28,32 +31,5 @@ function ReactRouters() {
   );
 }
 
-const AuthRoutes = () => {
-  const { isLoggedIn, fetchUserData, isValidated } = useAuthContext();
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const init = async () => {
-      try {
-        await fetchUserData();
-      } catch (e) {
-        // optionally redirect here
-      } finally {
-        setLoading(false);
-      }
-    };
-    init();
-  }, []);
-
-  if (loading) return
-
-  if (!isLoggedIn() && !isValidated) return <Navigate to="/login" />;
-  return <Outlet />;
-};
-const GuestRoutes = () => {
-  const { isLoggedIn } = useAuthContext();
-  if (!isLoggedIn()) return <Outlet />;
-  return <Navigate to="/" />;
-};
 
 export default ReactRouters;

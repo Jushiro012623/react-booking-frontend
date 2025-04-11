@@ -9,8 +9,26 @@ import { useBookingContext } from "@/context/bookingContextProvider";
 
 import { IBookingValue } from "@/context/bookingContextProvider";
 
-const contactNumberRegex = /^[0-9]{11}$/;
+/*
+    * 
+    * CONSTANTS 
+    * 
+*/
+const CONTACT_NUMBER_REGEX = /^[0-9]{11}$/;
 
+const DISCOUNTS = [
+    { key: 1, label: "REGULAR", value: "REGULAR" },
+    { key: 1, label: "PWD/SENIOR", value: "PWD_SENIOR" },
+    { key: 1, label: "HALF FARE", value: "HALF_FARE" },
+    { key: 1, label: "MINOR", value: "MINOR" },
+    { key: 1, label: "STUDENT", value: "STUDENT" },
+];
+
+/*
+    * 
+    * COMPONENTS JSX 
+    * 
+*/
 const AdditionalFeeRadio = (props: any) => {
   const { children, ...otherProps } = props;
   return (
@@ -28,13 +46,6 @@ const AdditionalFeeRadio = (props: any) => {
   );
 };
 const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
-  const discounts = [
-    { key: 1, label: "REGULAR", value: "REGULAR" },
-    { key: 1, label: "PWD/SENIOR", value: "PWD_SENIOR" },
-    { key: 1, label: "HALF FARE", value: "HALF_FARE" },
-    { key: 1, label: "MINOR", value: "MINOR" },
-    { key: 1, label: "STUDENT", value: "STUDENT" },
-  ];
   return (
     <React.Fragment>
       <div className="flex flex-col md:flex-row w-full">
@@ -77,7 +88,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
             if (value.length > 11 || value.length < 11) {
               return "Contact Number must be 11 digits long";
             }
-            if (!contactNumberRegex.test(value)) {
+            if (!CONTACT_NUMBER_REGEX.test(value)) {
               return "Contact Number must be a valid contact number";
             }
 
@@ -90,7 +101,7 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         <Select
           isRequired
           className="grow"
-          items={discounts}
+          items={DISCOUNTS}
           label="Discount"
           onChange={(event: any) =>
             handleOnInputChange(event.target.value, "discount")
@@ -182,7 +193,7 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length > 11 || value.length < 11) {
               return "Contact Number must be 11 digits long";
             }
-            if (!contactNumberRegex.test(value)) {
+            if (!CONTACT_NUMBER_REGEX.test(value)) {
               return "Contact Number must be a valid contact number";
             }
 
@@ -274,7 +285,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length > 11 || value.length < 11) {
               return "Contact Number must be 11 digits long";
             }
-            if (!contactNumberRegex.test(value)) {
+            if (!CONTACT_NUMBER_REGEX.test(value)) {
               return "Contact Number must be a valid contact number";
             }
 
@@ -322,7 +333,7 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length > 11 || value.length < 11) {
               return "Contact Number must be 11 digits long";
             }
-            if (!contactNumberRegex.test(value)) {
+            if (!CONTACT_NUMBER_REGEX.test(value)) {
               return "Contact Number must be a valid contact number";
             }
 
@@ -363,14 +374,31 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
     </React.Fragment>
   );
 };
+
+/*
+    * 
+    * JSX PRESENTER 
+    * 
+*/
 const FillupInfo = () => {
-  const { bookingValue, setBookingValue } = useBookingContext();
-  const handleOnInputChange = (value: any, name: string) => {
-    setBookingValue((prev: IBookingValue) => ({
-      ...prev,
-      info: { ...prev?.info, [name]: value },
-    }));
-  };
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
+    const { bookingValue, setBookingValue } = useBookingContext();
+
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
+    const handleOnInputChange = (value: any, name: string) => {
+        setBookingValue((prev: IBookingValue) => ({
+        ...prev,
+        info: { ...prev?.info, [name]: value },
+        }));
+    };
   return (
     <React.Fragment>
       <div className="w-full flex flex-col mt-10">

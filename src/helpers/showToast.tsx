@@ -1,5 +1,13 @@
 import { addToast } from "@heroui/toast";
 
+/**
+    * 
+    * @param {string} title - toast title 
+    * @param {string} description - toast description 
+    * @param {string} color - toast color variant 
+    * @return toast
+    * 
+*/
 export const showToast = (
   title: string,
   description: string,

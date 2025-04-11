@@ -5,6 +5,12 @@ import { TVoyage } from '@/models/voyages';
 import { TRoute } from '@/models/routes';
 import { TJourney } from '@/models/journey';
 import { TBookingType } from '@/models/bookingType';
+
+/**
+    * 
+    * INTERFACE AND TYPES 
+    * 
+*/
 interface IBookingContext {
     bookingValue: any;
     setBookingValue: (bookingValue: any) => void;
@@ -31,8 +37,18 @@ export interface IBookingValue {
     booking_type: TBookingType
 }
 
-const initialState: IStepState = { step: 1, value: 0 };
+/*
+    * 
+    * CONSTANTS 
+    * 
+*/
+const INITIAL_STATE: IStepState = { step: 1, value: 0 };
 
+/*
+    * 
+    * STEP DETAILS 
+    * 
+*/
 const stepDetails = (state : { step: number }):  IStepDetails => {
     switch(state.step){
         case 1:
@@ -54,14 +70,19 @@ const stepDetails = (state : { step: number }):  IStepDetails => {
     }
 }
 
+/**
+    * 
+    * BOOKING REDUCER 
+    * 
+*/
 const BookingContextReducer = (state: IStepState, action: any) => {
   switch(action.type){
     case "NEXT":
       return {step: Math.min(state.step + 1, 7), value: Math.min(state.value + 16.66666666666667, 100)}
     case "BACK":
-      return {step: Math.max(state.step - initialState.step, initialState.step), value: Math.max(state.value - 16.66666666666667, initialState.value)}
+      return {step: Math.max(state.step - INITIAL_STATE.step, INITIAL_STATE.step), value: Math.max(state.value - 16.66666666666667, INITIAL_STATE.value)}
     case "RESET":
-      return initialState
+      return INITIAL_STATE
     case "NONE":
       return {...state}
     default: 
@@ -69,14 +90,43 @@ const BookingContextReducer = (state: IStepState, action: any) => {
   }
 }
 
+/**
+    * 
+    * REACT CREATE CONTEXT 
+    * 
+*/
+
 const BookingContext = React.createContext<IBookingContext | undefined>(undefined)
 
+
+
 const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
-
-    const {isLoggedIn, token} = useAuthContext()
+    /**
+        * 
+        * REACT USE STATE 
+        * 
+    */
     const [bookingValue, setBookingValue] = React.useState<IBookingValue | null>(null)
-    const [state, dispatch] = React.useReducer(BookingContextReducer, initialState)
 
+    /**
+        * 
+        * REACT CUSTOM CONTEXT 
+        * 
+    */
+    const {isLoggedIn, token} = useAuthContext()
+
+    /**
+        * 
+        * REACT REDUCER 
+        * 
+    */
+    const [state, dispatch] = React.useReducer(BookingContextReducer, INITIAL_STATE)
+
+    /**
+        * 
+        * REACT USE EFFECTS 
+        * 
+    */
     React.useEffect(() => {
         if(isLoggedIn()){
             setBookingValue(null)
@@ -84,6 +134,11 @@ const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
         }
     }, [token])
 
+    /**
+        * 
+        * REACT USE MEMOS 
+        * 
+    */
     const contextValue = React.useMemo(() => ({
         bookingValue, 
         setBookingValue,
@@ -99,6 +154,11 @@ const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
   )
 }
 
+/**
+    * 
+    * REACT CUSTOM CONTEXT 
+    * 
+*/
 export const useBookingContext = () : IBookingContext => {
   const context = React.useContext(BookingContext);
   if (!context) {

@@ -10,9 +10,18 @@ import { Link } from '@heroui/link'
 import { formatToPeso } from '@/helpers/formatToPeso'
 import { useBookingContext } from '@/context/bookingContextProvider'
 const CompleteBooking = ({isOpen, onOpenChange, data}: any) => {
-    
+    /*
+        * 
+        * REACT CONTEXT 
+        * 
+    */
     const {dispatch, setBookingValue} = useBookingContext()
 
+    /*
+        * 
+        * HANDLERS 
+        * 
+    */
     const handleOnPress = (onClose: any) => {
         dispatch({ type: 'RESET' });
         onClose()
