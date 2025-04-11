@@ -27,11 +27,16 @@ export const AuthRoutes = () => {
     */
     React.useEffect(() => {
         const init = async () => {
+            
             if (!token) {
                 setLogoutReason('Unauthenticated')
                 return 
             }
+            /*
+                * DECODING TOKEN 
+            */
             const decodedToken: any = jwtDecode<{ exp: number }>(token);
+
             if (isTokenExpired(decodedToken.exp)) {
                 setLogoutReason('Authorization Expired')
                 return
@@ -41,6 +46,7 @@ export const AuthRoutes = () => {
                 setLogoutReason('Unauthorize')
                 return
             }
+            
             try {
                 const response: any = await fetchUserData();
                 if(response.status > 400){

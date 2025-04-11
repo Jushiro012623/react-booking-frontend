@@ -152,6 +152,7 @@ export const totalAmout = (bookingValue: any) => {
 
     return bookingValue?.fare?.fare ? formatToPeso(baseFare) : false;
 };
+
 /**
     * 
     * @description calculate the discount percentage value

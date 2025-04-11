@@ -27,7 +27,6 @@ type Props = { children: React.ReactNode };
     * REACT CREATE CONTEXT 
     * 
 */
-
 const AuthContext = React.createContext<TAuthContext>({} as TAuthContext);
 
 const AuthContextProvider: React.FC<Props> = ({ children }) => {
@@ -71,6 +70,15 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
         * HANDLERS 
         * 
     */
+
+    /**
+        * 
+        * @description login user 
+        * @param {Object} { username: string; password: string }
+        * @returns data: { user, token } 
+        * @example 
+        * const response = await loginUser(data)
+    */
     const loginUser = async (data: { username: string; password: string }) => {
         try {
             const response: TResponse = await loginApi(data);
@@ -93,11 +101,25 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
         }
     };
 
-    const isLoggedIn = () => {
+    /**
+        * 
+        * @description check if user is logged in
+        * @returns boolean 
+        * 
+    */
+    const isLoggedIn = (): boolean => {
         return !!user && !!token;
     };
 
-    const logoutUser = () => {
+    /**
+        * 
+        * @description logout user 
+        * @example 
+        * await logoutUser() 
+        * @returns void
+        * 
+    */
+    const logoutUser = (): void => {
         removeUserFromStorage()
         setUser(null);
         setToken("");
@@ -105,6 +127,14 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
         navigate("/login");
     };
 
+    /**
+        * 
+        * @description fetch user informations
+        * @example 
+        * const response = await fetchUserData() 
+        * @returns response { user info }
+        * 
+    */
     const fetchUserData = async () => {
         const response = await fetchUser();
         const user: any = response.data.data;
@@ -122,13 +152,11 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-
 /*
     * 
     * CUSTOM CONTEXT 
     * 
 */
-
 export const useAuthContext = (): TAuthContext => {
   const context = React.useContext(AuthContext);
   if (!context) {
