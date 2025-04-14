@@ -1,13 +1,15 @@
-import { useAuthContext } from "@/context/authContextProvider";
 import { Navigate, Outlet } from "react-router-dom";
 
-const GuestRoutes = () => {
-    
+import { useAuthContext } from "@/context/authContextProvider";
+
+const GuestRoutes = ({isAdmin}: {isAdmin?: boolean}) => {
+
   const { isLoggedIn } = useAuthContext();
 
   if (!isLoggedIn()) return <Outlet />;
-
-  return <Navigate to="/" />;
+    
+  return isAdmin ? <Navigate to="/admin" /> : <Navigate to="/" />;
+  
 };
 
-export default GuestRoutes
+export default GuestRoutes;

@@ -15,7 +15,7 @@ export const siteConfig = {
     {
       label: "About",
       href: "/about",
-    }
+    },
   ],
   navMenuItems: [
     {
@@ -40,5 +40,5 @@ export const siteConfig = {
     twitter: "https://twitter.com",
     discord: "https://discord.gg",
   },
-  booking : '/booking'
+  booking: "/booking",
 };

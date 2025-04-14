@@ -5,32 +5,33 @@ import { Radio, RadioGroup } from "@heroui/radio";
 import { cn } from "@heroui/theme";
 import { NumberInput } from "@heroui/number-input";
 import { Spacer } from "@heroui/spacer";
-import { useBookingContext } from "@/context/bookingContextProvider";
 
+import { useBookingContext } from "@/context/bookingContextProvider";
 import { IBookingValue } from "@/context/bookingContextProvider";
 
 /*
-    * 
-    * CONSTANTS 
-    * 
-*/
+ *
+ * CONSTANTS
+ *
+ */
 const CONTACT_NUMBER_REGEX = /^[0-9]{11}$/;
 
 const DISCOUNTS = [
-    { key: 1, label: "REGULAR", value: "REGULAR" },
-    { key: 1, label: "PWD/SENIOR", value: "PWD_SENIOR" },
-    { key: 1, label: "HALF FARE", value: "HALF_FARE" },
-    { key: 1, label: "MINOR", value: "MINOR" },
-    { key: 1, label: "STUDENT", value: "STUDENT" },
+  { key: 1, label: "REGULAR", value: "REGULAR" },
+  { key: 1, label: "PWD/SENIOR", value: "PWD_SENIOR" },
+  { key: 1, label: "HALF FARE", value: "HALF_FARE" },
+  { key: 1, label: "MINOR", value: "MINOR" },
+  { key: 1, label: "STUDENT", value: "STUDENT" },
 ];
 
 /*
-    * 
-    * COMPONENTS JSX 
-    * 
-*/
+ *
+ * COMPONENTS JSX
+ *
+ */
 const AdditionalFeeRadio = (props: any) => {
   const { children, ...otherProps } = props;
+
   return (
     <Radio
       {...otherProps}
@@ -38,9 +39,10 @@ const AdditionalFeeRadio = (props: any) => {
         base: cn(
           "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
           "flex-row-reverse max-w-[300px] cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent",
-          "data-[selected=true]:border-primary"
+          "data-[selected=true]:border-primary",
         ),
-      }}>
+      }}
+    >
       {children}
     </Radio>
   );
@@ -52,13 +54,9 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         <Input
           isRequired
           className="max-w-full"
-          placeholder="Jonoh Nombeng"
           label="Full Name"
+          placeholder="Jonoh Nombeng"
           type="text"
-          value={bookingValue?.info?.passenger_name}
-          onValueChange={(value) =>
-            handleOnInputChange(value, "passenger_name")
-          }
           validate={(value) => {
             if (!value) {
               return "This field is required";
@@ -66,21 +64,22 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
             if (value.length < 4) {
               return "Name must be atleast longer than 4 characters";
             }
+
             return null;
           }}
+          value={bookingValue?.info?.passenger_name}
+          onValueChange={(value) =>
+            handleOnInputChange(value, "passenger_name")
+          }
         />
         <Spacer x={5} y={5} />
         <Input
           isRequired
           className="max-w-full"
-          placeholder="09XX-XXXX-XXX"
           label="Contact Number"
-          type="text"
           name="contact_no"
-          value={bookingValue?.info?.contact_no}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "contact_no")
-          }
+          placeholder="09XX-XXXX-XXX"
+          type="text"
           validate={(value) => {
             if (!value) {
               return "Contact Number is required";
@@ -94,6 +93,10 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
 
             return null;
           }}
+          value={bookingValue?.info?.contact_no}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "contact_no")
+          }
         />
       </div>
       <Spacer y={5} />
@@ -101,13 +104,14 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
         <Select
           isRequired
           className="grow"
+          defaultSelectedKeys={["REGULAR"]}
           items={DISCOUNTS}
           label="Discount"
+          placeholder="Select Discount"
           onChange={(event: any) =>
             handleOnInputChange(event.target.value, "discount")
           }
-          defaultSelectedKeys={["REGULAR"]}
-          placeholder="Select Discount">
+        >
           {(discount) => (
             <SelectItem key={discount.value}>{discount.label}</SelectItem>
           )}
@@ -117,10 +121,8 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
           isRequired
           defaultValue={1}
           label="Passenger Quantity"
-          placeholder="Enter Passenger Quantity"
           name="quantity"
-          value={bookingValue?.info?.quantity}
-          onValueChange={(value: any) => handleOnInputChange(value, "quantity")}
+          placeholder="Enter Passenger Quantity"
           validate={(value) => {
             if (value < 1) {
               return "Quantity must be atleast 1";
@@ -128,19 +130,23 @@ const Passenger = ({ handleOnInputChange, bookingValue }: any) => {
             if (value > 100) {
               return "Quantity must be less than 100";
             }
+
             return null;
           }}
+          value={bookingValue?.info?.quantity}
+          onValueChange={(value: any) => handleOnInputChange(value, "quantity")}
         />
       </div>
 
       <Spacer y={5} />
       <RadioGroup
         isRequired
-        description="Select whether airconditioned or basic ride experience."
-        defaultValue={bookingValue?.info?.add_ons}
-        label="Add Ons"
         className="w-full"
-        onValueChange={(value) => handleOnInputChange(value, "add_ons")}>
+        defaultValue={bookingValue?.info?.add_ons}
+        description="Select whether airconditioned or basic ride experience."
+        label="Add Ons"
+        onValueChange={(value) => handleOnInputChange(value, "add_ons")}
+      >
         <AdditionalFeeRadio description="Airconditioned Voyages" value={2}>
           Airconditioned
         </AdditionalFeeRadio>
@@ -159,11 +165,9 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
         <Input
           isRequired
           className="max-w-full"
-          placeholder="Jonoh Nombeng"
           label="Shipper Name"
+          placeholder="Jonoh Nombeng"
           type="text"
-          value={bookingValue?.info?.shipper_name}
-          onValueChange={(value) => handleOnInputChange(value, "shipper_name")}
           validate={(value) => {
             if (!value) {
               return "This field is required";
@@ -171,21 +175,20 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length < 4) {
               return "Name must be atleast longer than 4 characters";
             }
+
             return null;
           }}
+          value={bookingValue?.info?.shipper_name}
+          onValueChange={(value) => handleOnInputChange(value, "shipper_name")}
         />
         <Spacer x={5} y={5} />
         <Input
           isRequired
           className="max-w-full"
-          placeholder="09XX-XXXX-XXX"
           label="Contact Number"
-          type="text"
           name="contact_no"
-          value={bookingValue?.info?.contact_no}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "contact_no")
-          }
+          placeholder="09XX-XXXX-XXX"
+          type="text"
           validate={(value) => {
             if (!value) {
               return "Contact Number is required";
@@ -199,6 +202,10 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
 
             return null;
           }}
+          value={bookingValue?.info?.contact_no}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "contact_no")
+          }
         />
       </div>
       <Spacer y={5} />
@@ -206,14 +213,10 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
         <Input
           isRequired
           className="max-w-full"
-          placeholder="XXX-XXX-XXX"
           label="Plate Name"
-          type="text"
           name="plate_number"
-          value={bookingValue?.info?.plate_number}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "plate_number")
-          }
+          placeholder="XXX-XXX-XXX"
+          type="text"
           validate={(value) => {
             if (!value) {
               return "This field is required";
@@ -224,6 +227,10 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
 
             return null;
           }}
+          value={bookingValue?.info?.plate_number}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "plate_number")
+          }
         />
         <Spacer x={5} />
         <div className="w-full"> </div>
@@ -232,8 +239,8 @@ const RollingCargo = ({ bookingValue, handleOnInputChange }: any) => {
       <Textarea
         className="max-w-ful"
         label="Description"
-        placeholder="Enter your item description"
         name="description"
+        placeholder="Enter your item description"
         value={bookingValue?.info?.description}
         onValueChange={(value: any) =>
           handleOnInputChange(value, "description")
@@ -249,14 +256,10 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         <Input
           isRequired
           className="max-w-full"
-          placeholder="Jonoh Nombeng"
           label="Shipper Name"
-          type="text"
           name="shipper_name"
-          value={bookingValue?.info?.shipper_name}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "shipper_name")
-          }
+          placeholder="Jonoh Nombeng"
+          type="text"
           validate={(value) => {
             if (!value) {
               return "This field is required";
@@ -264,20 +267,21 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length < 4) {
               return "Name must be atleast longer than 4 characters";
             }
+
             return null;
           }}
+          value={bookingValue?.info?.shipper_name}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "shipper_name")
+          }
         />
         <Spacer x={5} y={5} />
         <Input
           isRequired
           className="max-w-full"
-          placeholder="09XX-XXXX-XXX"
           label="Shipper Contact Number"
+          placeholder="09XX-XXXX-XXX"
           type="text"
-          value={bookingValue?.info?.contact_no}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "contact_no")
-          }
           validate={(value) => {
             if (!value) {
               return "Contact Number is required";
@@ -291,6 +295,10 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
 
             return null;
           }}
+          value={bookingValue?.info?.contact_no}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "contact_no")
+          }
         />
       </div>
       <Spacer y={5} />
@@ -298,13 +306,9 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         <Input
           isRequired
           className="max-w-full"
-          placeholder="Gol Downey"
           label="Receiver Name"
+          placeholder="Gol Downey"
           type="text"
-          value={bookingValue?.info?.receiver_name}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "receiver_name")
-          }
           validate={(value) => {
             if (!value) {
               return "This field is required";
@@ -312,20 +316,21 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
             if (value.length < 4) {
               return "Name must be atleast longer than 4 characters";
             }
+
             return null;
           }}
+          value={bookingValue?.info?.receiver_name}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "receiver_name")
+          }
         />
         <Spacer x={5} y={5} />
         <Input
           isRequired
           className="max-w-full"
-          placeholder="09XX-XXXX-XXX"
           label="Receiver Contact Number"
+          placeholder="09XX-XXXX-XXX"
           type="text"
-          value={bookingValue?.info?.receiver_contact_no}
-          onValueChange={(value: any) =>
-            handleOnInputChange(value, "receiver_contact_no")
-          }
           validate={(value) => {
             if (!value) {
               return "Contact Number is required";
@@ -339,6 +344,10 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
 
             return null;
           }}
+          value={bookingValue?.info?.receiver_contact_no}
+          onValueChange={(value: any) =>
+            handleOnInputChange(value, "receiver_contact_no")
+          }
         />
       </div>
       <Spacer x={5} y={5} />
@@ -346,10 +355,8 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
         isRequired
         defaultValue={1}
         label="Item Quantity"
-        placeholder="Enter Passenger Quantity"
         name="quantity"
-        value={bookingValue?.info?.quantity}
-        onValueChange={(value: any) => handleOnInputChange(value, "quantity")}
+        placeholder="Enter Passenger Quantity"
         validate={(value) => {
           if (value < 1) {
             return "Quantity must be atleast 1";
@@ -357,15 +364,18 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
           if (value > 100) {
             return "Quantity must be less than 100";
           }
+
           return null;
         }}
+        value={bookingValue?.info?.quantity}
+        onValueChange={(value: any) => handleOnInputChange(value, "quantity")}
       />
       <Spacer x={5} y={5} />
       <Textarea
         className="max-w-ful"
         label="Description"
-        placeholder="Enter your item description"
         name="description"
+        placeholder="Enter your item description"
         value={bookingValue?.info?.description}
         onValueChange={(value: any) =>
           handleOnInputChange(value, "description")
@@ -376,48 +386,49 @@ const DropCargo = ({ bookingValue, handleOnInputChange }: any) => {
 };
 
 /*
-    * 
-    * JSX PRESENTER 
-    * 
-*/
+ *
+ * JSX PRESENTER
+ *
+ */
 const FillupInfo = () => {
-    /*
-        * 
-        * REACT CONTEXT 
-        * 
-    */
-    const { bookingValue, setBookingValue } = useBookingContext();
+  /*
+   *
+   * REACT CONTEXT
+   *
+   */
+  const { bookingValue, setBookingValue } = useBookingContext();
 
-    /*
-        * 
-        * HANDLERS 
-        * 
-    */
-    const handleOnInputChange = (value: any, name: string) => {
-        setBookingValue((prev: IBookingValue) => ({
-        ...prev,
-        info: { ...prev?.info, [name]: value },
-        }));
-    };
+  /*
+   *
+   * HANDLERS
+   *
+   */
+  const handleOnInputChange = (value: any, name: string) => {
+    setBookingValue((prev: IBookingValue) => ({
+      ...prev,
+      info: { ...prev?.info, [name]: value },
+    }));
+  };
+
   return (
     <React.Fragment>
       <div className="w-full flex flex-col mt-10">
         {bookingValue?.booking_type?.id === 1 && (
           <Passenger
-            handleOnInputChange={handleOnInputChange}
             bookingValue={bookingValue}
+            handleOnInputChange={handleOnInputChange}
           />
         )}
         {bookingValue?.booking_type?.id === 2 && (
           <RollingCargo
-            handleOnInputChange={handleOnInputChange}
             bookingValue={bookingValue}
+            handleOnInputChange={handleOnInputChange}
           />
         )}
         {bookingValue?.booking_type?.id === 3 && (
           <DropCargo
-            handleOnInputChange={handleOnInputChange}
             bookingValue={bookingValue}
+            handleOnInputChange={handleOnInputChange}
           />
         )}
       </div>

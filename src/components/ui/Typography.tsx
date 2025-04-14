@@ -35,7 +35,7 @@ export const colors = {
   dark: "text-gray-800",
   gray: "text-gray-500",
   white: "text-white",
-  none: ''
+  none: "",
 } as const;
 
 interface TypographyProps {

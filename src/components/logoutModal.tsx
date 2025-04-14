@@ -1,34 +1,71 @@
 import { Button } from "@heroui/button";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@heroui/modal";
 import React from "react";
+
 import Typography from "./ui/Typography";
+
 import { useAuthContext } from "@/context/authContextProvider";
 
-const LogoutModal = ({title, body = "You've been logged out", className, canCancel = false}: any) => {
-    
-    const {onOpen, isOpen, onOpenChange} = useDisclosure();
-    const { logoutUser } = useAuthContext();
-    React.useEffect(() => {
-        onOpen()
-    },[]);
+const LogoutModal = ({
+  title,
+  body = "You've been logged out",
+  className,
+  canCancel = false,
+}: any) => {
+  const { onOpen, isOpen, onOpenChange } = useDisclosure();
+  const { logoutUser } = useAuthContext();
+
+  React.useEffect(() => {
+    onOpen();
+  }, []);
+
   return (
     <React.Fragment>
-      <Modal isOpen={isOpen} defaultOpen={true} onOpenChange={onOpenChange} isDismissable={false} hideCloseButton size="sm" backdrop="blur">
+      <Modal
+        hideCloseButton
+        backdrop="blur"
+        defaultOpen={true}
+        isDismissable={false}
+        isOpen={isOpen}
+        size="sm"
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className={`flex flex-col gap-1 ${className}`}>
-                <Typography variant="h2" className="text-center">{title}</Typography>
+                <Typography className="text-center" variant="h2">
+                  {title}
+                </Typography>
               </ModalHeader>
               <ModalBody>
                 <Typography className="text-center">{body}</Typography>
               </ModalBody>
               <ModalFooter>
-                {canCancel && <Button color="primary" variant="flat" className="w-full" onPress={onClose}>
+                {canCancel && (
+                  <Button
+                    className="w-full"
+                    color="primary"
+                    variant="flat"
+                    onPress={onClose}
+                  >
                     CANCEL
-                </Button>}
-                <Button color={canCancel ? "danger" : "primary"} variant="flat" className="w-full" onPress={logoutUser}>
-                    OK
+                  </Button>
+                )}
+                <Button
+                  className="w-full"
+                  color={canCancel ? "danger" : "primary"}
+                  variant="flat"
+                  onPress={logoutUser}
+                >
+                  OK
                 </Button>
               </ModalFooter>
             </>

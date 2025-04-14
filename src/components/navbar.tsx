@@ -54,6 +54,7 @@ export const Navbar = () => {
       type="search"
     />
   );
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -61,7 +62,8 @@ export const Navbar = () => {
           <Link
             className="flex justify-start items-center gap-1"
             color="foreground"
-            href="/">
+            href="/"
+          >
             <Logo />
             <p className="font-bold text-inherit">CARGO</p>
           </Link>
@@ -70,13 +72,14 @@ export const Navbar = () => {
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href} isActive={item.label === "Booking"}>
               <Link
-                isDisabled={item.label === "About"}
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
-                href={item.href}>
+                href={item.href}
+                isDisabled={item.label === "About"}
+              >
                 {item.label}
               </Link>
             </NavbarItem>
@@ -86,7 +89,8 @@ export const Navbar = () => {
 
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end">
+        justify="end"
+      >
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal href={siteConfig.links.twitter} title="Twitter">
             <TwitterIcon className="text-default-500" />
@@ -106,8 +110,8 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Avatar
                     showFallback
-                    name={user.username}
                     className="cursor-pointer uppercase"
+                    name={user.username}
                   />
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -123,7 +127,8 @@ export const Navbar = () => {
                   <DropdownItem
                     key="logout"
                     color="danger"
-                    onPress={logoutUser}>
+                    onPress={logoutUser}
+                  >
                     Log Out
                   </DropdownItem>
                 </DropdownMenu>
@@ -135,7 +140,8 @@ export const Navbar = () => {
                 className="text-sm font-normal text-default-600 bg-default-100"
                 href={siteConfig.booking}
                 startContent={<HeartFilledIcon className="text-danger" />}
-                variant="flat">
+                variant="flat"
+              >
                 Book now
               </Button>
             </NavbarItem>
@@ -167,13 +173,14 @@ export const Navbar = () => {
               <Link
                 color={index === 2 ? "primary" : "foreground"}
                 href="#"
-                size="lg">
+                size="lg"
+              >
                 {item.label}
               </Link>
             </NavbarMenuItem>
           ))}
           <NavbarMenuItem>
-            <Link onPress={logoutUser} color={"danger"} size="lg">
+            <Link color={"danger"} size="lg" onPress={logoutUser}>
               Logout
             </Link>
           </NavbarMenuItem>

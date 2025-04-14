@@ -1,4 +1,4 @@
 export type TBookingType = {
-    id: number;
-    name: string;
-}
+  id: number;
+  name: string;
+};

@@ -1,11 +1,18 @@
 import { Button } from "@heroui/button";
 
-const ErrorFetchingBooking = ({ refetch, isLoading }: { refetch: (abortController: AbortController) => void; isLoading: boolean }) => (
+const ErrorFetchingBooking = ({
+  refetch,
+  isLoading,
+}: {
+  refetch: (abortController: AbortController) => void;
+  isLoading: boolean;
+}) => (
   <div className="flex w-full items-center justify-center">
     <Button
-      onPress={() => refetch(new AbortController())}
+      isLoading={isLoading}
       variant="bordered"
-      isLoading={isLoading}>
+      onPress={() => refetch(new AbortController())}
+    >
       Refresh List
     </Button>
   </div>

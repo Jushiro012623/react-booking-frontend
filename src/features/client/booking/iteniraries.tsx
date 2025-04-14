@@ -1,94 +1,97 @@
-import { useBookingContext } from "@/context/bookingContextProvider";
-import { useApiRequest } from "@/hooks/useApiRequest";
-import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
 import { Card, CardHeader } from "@heroui/card";
 import { Divider } from "@heroui/divider";
 import { Pagination } from "@heroui/pagination";
 import { Skeleton } from "@heroui/skeleton";
 import { Spacer } from "@heroui/spacer";
 import React from "react";
+
+import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
+import { useApiRequest } from "@/hooks/useApiRequest";
+import { useBookingContext } from "@/context/bookingContextProvider";
 import { IBookingValue } from "@/context/bookingContextProvider";
 import { TJourney } from "@/models/journey";
 import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 import LogoutModal from "@/components/logoutModal";
 
 const Itineraries = () => {
-    /*
-        * 
-        * REACT CONTEXT 
-        * 
-    */
-    const { bookingValue, setBookingValue, dispatch } = useBookingContext();
+  /*
+   *
+   * REACT CONTEXT
+   *
+   */
+  const { bookingValue, setBookingValue, dispatch } = useBookingContext();
 
-    /*
-        * 
-        * REACT USE STATES
-        * 
-    */
-    const [currentPage, setCurrentPage] = React.useState<number>(1);
+  /*
+   *
+   * REACT USE STATES
+   *
+   */
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
 
-    /*
-        * 
-        * REACT USE MEMO 
-        * 
-    */
-    const fetchItenirariesFromAPI = React.useMemo(
-        () =>
-        new ApiRequestBuilder()
-            .setUrl("/client/bookingProcess/getJourneySchedules")
-            .setMethod("POST")
-            .setData({
-            voyage_code: bookingValue?.voyage?.voyage_code,
-            booking_route_code: bookingValue?.route?.booking_route_code,
-            booking_type: bookingValue?.booking_type?.id,
-            })
-            .addParam("page", currentPage),
-        [currentPage]
+  /*
+   *
+   * REACT USE MEMO
+   *
+   */
+  const fetchItenirariesFromAPI = React.useMemo(
+    () =>
+      new ApiRequestBuilder()
+        .setUrl("/client/bookingProcess/getJourneySchedules")
+        .setMethod("POST")
+        .setData({
+          voyage_code: bookingValue?.voyage?.voyage_code,
+          booking_route_code: bookingValue?.route?.booking_route_code,
+          booking_type: bookingValue?.booking_type?.id,
+        })
+        .addParam("page", currentPage),
+    [currentPage],
+  );
+
+  /*
+   *
+   * CUSTOM HOOKS
+   *
+   */
+  const { data, error, isLoading, refetch } = useApiRequest(
+    fetchItenirariesFromAPI,
+  );
+
+  /*
+   *
+   * FETCHING HANDLERS
+   *
+   */
+  if (error?.response?.status === 401) {
+    return (
+      <LogoutModal
+        body={error?.response?.data.message}
+        className="px-10"
+        title="You've Been Logged Out"
+      />
     );
+  }
+  if (error)
+    return <ErrorFetchingBooking isLoading={isLoading} refetch={refetch} />;
 
-    /*
-        * 
-        * CUSTOM HOOKS 
-        * 
-    */
-    const { data, error, isLoading, refetch } = useApiRequest(
-        fetchItenirariesFromAPI
-    );
+  /*
+   *
+   * HANDLERS
+   *
+   */
+  const handleOnPress = (value: any) => {
+    const itineraries: any = JSON.parse(value);
+
+    setBookingValue((prev: IBookingValue) => ({
+      ...prev,
+      itineraries,
+    }));
+
+    dispatch({ type: "NEXT" });
+  };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   
-    /*
-        * 
-        * FETCHING HANDLERS 
-        * 
-    */
-    if (error?.response?.status === 401) {
-        return (
-            <LogoutModal
-                title="You've Been Logged Out"
-                body={error?.response?.data.message}
-                className="px-10"
-            />
-        );
-    }
-    if (error) return <ErrorFetchingBooking refetch={refetch} isLoading={isLoading} />;
-
-    /*
-        * 
-        * HANDLERS 
-        * 
-    */
-    const handleOnPress = (value: any) => {
-        const itineraries: any = JSON.parse(value);
-        setBookingValue((prev: IBookingValue) => ({
-        ...prev,
-        itineraries,
-        }));
-
-        dispatch({ type: "NEXT" });
-    };
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-    };
-
   return (
     <div className="w-full flex flex-wrap gap-2 mt-10">
       {isLoading
@@ -105,11 +108,12 @@ const Itineraries = () => {
         : data.data.map((itinerary: TJourney) => (
             <React.Fragment key={itinerary.itinerary_code}>
               <Card
-                className={`max-w-[900px] py-3 md:h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? "ring ring-blue-100" : null}`}
                 fullWidth
-                isPressable
                 isHoverable
-                onPress={() => handleOnPress(JSON.stringify(itinerary))}>
+                isPressable
+                className={`max-w-[900px] py-3 md:h-40 ${bookingValue?.itineraries?.itinerary_code === itinerary.itinerary_code ? "ring ring-blue-100" : null}`}
+                onPress={() => handleOnPress(JSON.stringify(itinerary))}
+              >
                 <CardHeader className="flex gap-3">
                   <div className="flex flex-col">
                     <p className="text-md">{bookingValue?.route?.label}</p>
@@ -125,7 +129,7 @@ const Itineraries = () => {
                       <p>Departure Date:</p>{" "}
                       <p>
                         {new Date(
-                          itinerary.departure_date
+                          itinerary.departure_date,
                         ).toLocaleDateString()}
                       </p>
                     </div>
@@ -159,13 +163,13 @@ const Itineraries = () => {
 
       {(data?.data || data?.data?.length > 0) && (
         <div className="w-full flex justify-center">
-          <Skeleton isLoaded={!isLoading} className="rounded-lg">
+          <Skeleton className="rounded-lg" isLoaded={!isLoading}>
             <Pagination
               loop
               showControls
               color="primary"
-              initialPage={data?.current_page}
-              total={data?.last_page}
+              initialPage={data?.pagination?.current_page}
+              total={data?.pagination?.last_page}
               onChange={handlePageChange}
             />
           </Skeleton>

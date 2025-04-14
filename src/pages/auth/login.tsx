@@ -1,7 +1,3 @@
-import { Logo } from "@/components/icons";
-import Typography from "@/components/ui/Typography";
-import { useAuthContext } from "@/context/authContextProvider";
-import { showToast } from "@/helpers/showToast";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
 import { Form } from "@heroui/form";
@@ -10,98 +6,109 @@ import { Link } from "@heroui/link";
 import { Spacer } from "@heroui/spacer";
 import React from "react";
 
+import { showToast } from "@/helpers/showToast";
+import { useAuthContext } from "@/context/authContextProvider";
+import Typography from "@/components/ui/Typography";
+import { Logo } from "@/components/icons";
+
 const Login = () => {
-    /*
-        * 
-        * REACT USE STATES 
-        * 
-    */
-    const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [errors, setErrors] = React.useState<any>(null);
-    /*
-        * 
-        * CUSTOM CONTEXT 
-        * 
-    */
-    const { loginUser } = useAuthContext();
+  /*
+   *
+   * REACT USE STATES
+   *
+   */
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [errors, setErrors] = React.useState<any>(null);
+  /*
+   *
+   * CUSTOM CONTEXT
+   *
+   */
+  const { loginUser } = useAuthContext();
 
-    /*
-        * 
-        * HELPERS 
-        * 
-    */
-    const attepmtToLogin = async (data: any) => {
-            const response: any = await loginUser(data);
-            showToast("Login Successfully", response.data.message, "success");
-            return response
-    }
-    const catchAttemptLoginError = (error: any): void => {
-        if (error?.response?.data?.errors?.username) {
-            showToast(
-                "Login Failed",
-                error?.response?.data?.errors?.username[0],
-                "danger"
-            );
-            setErrors({ username: error?.response?.data?.errors?.username[0] });
-        } else if (error?.response?.data?.errors?.password) {
-            showToast(
-                "Login Failed",
-                error?.response?.data?.errors?.password[0],
-                "danger"
-            );
-            setErrors({ password: error?.response?.data?.errors?.password[0] });
-        } else {
-            const errorMessage =
-            error?.response?.data?.message || "An unexpected error occurred.";
-            showToast("Login Failed", errorMessage, "danger");
-        }
-    }
+  /*
+   *
+   * HELPERS
+   *
+   */
+  const attepmtToLogin = async (data: any) => {
+    const response: any = await loginUser(data);
 
-    /*
-        * 
-        * BUTTON HANDLERS 
-        * 
-    */
-    const handleOnSubmit = async (event: any) => {
-        event.preventDefault();
-        const data: any = Object.fromEntries(new FormData(event.currentTarget));
-        try {
-            setIsLoading(true);
-            await attepmtToLogin(data);
-        } catch (error: any) {
-            catchAttemptLoginError(error)
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    showToast("Login Successfully", response.data.message, "success");
+
+    return response;
+  };
+  const catchAttemptLoginError = (error: any): void => {
+    if (error?.response?.data?.errors?.username) {
+      showToast(
+        "Login Failed",
+        error?.response?.data?.errors?.username[0],
+        "danger",
+      );
+      setErrors({ username: error?.response?.data?.errors?.username[0] });
+    } else if (error?.response?.data?.errors?.password) {
+      showToast(
+        "Login Failed",
+        error?.response?.data?.errors?.password[0],
+        "danger",
+      );
+      setErrors({ password: error?.response?.data?.errors?.password[0] });
+    } else {
+      const errorMessage =
+        error?.response?.data?.message || "An unexpected error occurred.";
+
+      showToast("Login Failed", errorMessage, "danger");
+    }
+  };
+
+  /*
+   *
+   * BUTTON HANDLERS
+   *
+   */
+  const handleOnSubmit = async (event: any) => {
+    event.preventDefault();
+    const data: any = Object.fromEntries(new FormData(event.currentTarget));
+
+    try {
+      setIsLoading(true);
+      await attepmtToLogin(data);
+    } catch (error: any) {
+      catchAttemptLoginError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <main className="flex items-center justify-center dark text-foreground bg-background h-screen">
       <div>
         <Form
           className="w-72 sm:w-96 flex items-center"
+          validationErrors={errors}
           onSubmit={handleOnSubmit}
-          validationErrors={errors}>
+        >
           <Logo size={150} />
           <Input
             className="max-w-full"
             label="Email or username"
-            type="text"
             name="username"
+            type="text"
           />
           <Spacer y={2} />
           <Input
             className="max-w-full"
             label="Password"
-            type="password"
             name="password"
+            type="password"
           />
           <Spacer y={2} />
           <Button
             className="w-full"
             color="primary"
+            isLoading={isLoading}
             type="submit"
-            isLoading={isLoading}>
+          >
             Login
           </Button>
           <Spacer y={2} />

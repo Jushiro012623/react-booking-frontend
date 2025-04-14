@@ -1,171 +1,234 @@
-import React from 'react'
-import { useAuthContext } from './authContextProvider';
-import { TFare } from '@/models/fare';
-import { TVoyage } from '@/models/voyages';
-import { TRoute } from '@/models/routes';
-import { TJourney } from '@/models/journey';
-import { TBookingType } from '@/models/bookingType';
+import React from "react";
+
+import { useAuthContext } from "./authContextProvider";
+
+import { TFare } from "@/models/fare";
+import { TVoyage } from "@/models/voyages";
+import { TRoute } from "@/models/routes";
+import { TJourney } from "@/models/journey";
+import { TBookingType } from "@/models/bookingType";
 
 /**
-    * 
-    * INTERFACE AND TYPES 
-    * 
-*/
+ *
+ * INTERFACE AND TYPES
+ *
+ */
 interface IBookingContext {
-    bookingValue: any;
-    setBookingValue: (bookingValue: any) => void;
-    state: IStepState;
-    dispatch: React.Dispatch<any>;
-    stepDetails: (state: any) => any
+  bookingValue: any;
+  setBookingValue: (bookingValue: any) => void;
+  state: IStepState;
+  dispatch: React.Dispatch<any>;
+  stepDetails: (state: any) => any;
 }
 export interface IStepState {
   step: number;
   value: number;
 }
 interface IStepDetails {
-    errorMessage: string;
-    title: string;
-    subtitle: string;
-    stepProgress: string;
+  errorMessage: string;
+  title: string;
+  subtitle: string;
+  stepProgress: string;
 }
 export interface IBookingValue {
-    fare: TFare;
-    voyage: TVoyage;
-    route: TRoute
-    itineraries: TJourney
-    info: any;
-    booking_type: TBookingType
+  fare: TFare;
+  voyage: TVoyage;
+  route: TRoute;
+  itineraries: TJourney;
+  info: any;
+  booking_type: TBookingType;
 }
 
 /*
-    * 
-    * CONSTANTS 
-    * 
-*/
+ *
+ * CONSTANTS
+ *
+ */
 const INITIAL_STATE: IStepState = { step: 1, value: 0 };
 
 /*
-    * 
-    * STEP DETAILS 
-    * 
-*/
-const stepDetails = (state : { step: number }):  IStepDetails => {
-    switch(state.step){
-        case 1:
-            return { errorMessage: "Please select a voyage.", title:"Where would you like to board with us?", subtitle: "Select your preferred voyage to begin.", stepProgress: "Let's Begin" }
-        case 2:
-            return { errorMessage: "Please select a route.", title:"Where would you like to go?", subtitle: "Select your preferred route for the journey.", stepProgress: "" }
-        case 3:
-            return { errorMessage: "Please select a booking type.", title:"What type of booking would you like?", subtitle: "Choose the booking type that suits your need.", stepProgress: "" }
-        case 4:
-            return { errorMessage: "Please select fares.", title:"Which fare option would you prefer", subtitle: "Select the fare that best suits your needs.", stepProgress: "" }
-        case 5:
-            return { errorMessage: "Please select initerary.", title:"Which itinerary  suits you?", subtitle: "Choose your preferred schedule for the trip.", stepProgress: "" }
-        case 6:
-            return { errorMessage: "Please fill up all fields.", title:"What information do we need from you?", subtitle: "Please fill in the details to complete your booking.", stepProgress: "" }
-        case 7:
-            return { errorMessage: "Please agree to terms and conditions.", title:"Ready to confirm your booking?", subtitle: "Take a moment to review your booking  summary.", stepProgress: "" }
-        default:
-            return { errorMessage: "An error occurred.", title:"Lorem ipsum dolor sit amet.", subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing.", stepProgress: "" }
-    }
-}
-
-/**
-    * 
-    * BOOKING REDUCER 
-    * 
-*/
-const BookingContextReducer = (state: IStepState, action: any) => {
-  switch(action.type){
-    case "NEXT":
-      return {step: Math.min(state.step + 1, 7), value: Math.min(state.value + 16.66666666666667, 100)}
-    case "BACK":
-      return {step: Math.max(state.step - INITIAL_STATE.step, INITIAL_STATE.step), value: Math.max(state.value - 16.66666666666667, INITIAL_STATE.value)}
-    case "RESET":
-      return INITIAL_STATE
-    case "NONE":
-      return {...state}
-    default: 
-      return state
+ *
+ * STEP DETAILS
+ *
+ */
+const stepDetails = (state: { step: number }): IStepDetails => {
+  switch (state.step) {
+    case 1:
+      return {
+        errorMessage: "Please select a voyage.",
+        title: "Where would you like to board with us?",
+        subtitle: "Select your preferred voyage to begin.",
+        stepProgress: "Let's Begin",
+      };
+    case 2:
+      return {
+        errorMessage: "Please select a route.",
+        title: "Where would you like to go?",
+        subtitle: "Select your preferred route for the journey.",
+        stepProgress: "",
+      };
+    case 3:
+      return {
+        errorMessage: "Please select a booking type.",
+        title: "What type of booking would you like?",
+        subtitle: "Choose the booking type that suits your need.",
+        stepProgress: "",
+      };
+    case 4:
+      return {
+        errorMessage: "Please select fares.",
+        title: "Which fare option would you prefer",
+        subtitle: "Select the fare that best suits your needs.",
+        stepProgress: "",
+      };
+    case 5:
+      return {
+        errorMessage: "Please select initerary.",
+        title: "Which itinerary  suits you?",
+        subtitle: "Choose your preferred schedule for the trip.",
+        stepProgress: "",
+      };
+    case 6:
+      return {
+        errorMessage: "Please fill up all fields.",
+        title: "What information do we need from you?",
+        subtitle: "Please fill in the details to complete your booking.",
+        stepProgress: "",
+      };
+    case 7:
+      return {
+        errorMessage: "Please agree to terms and conditions.",
+        title: "Ready to confirm your booking?",
+        subtitle: "Take a moment to review your booking  summary.",
+        stepProgress: "",
+      };
+    default:
+      return {
+        errorMessage: "An error occurred.",
+        title: "Lorem ipsum dolor sit amet.",
+        subtitle: "Lorem ipsum dolor sit amet consectetur adipisicing.",
+        stepProgress: "",
+      };
   }
-}
+};
 
 /**
-    * 
-    * REACT CREATE CONTEXT 
-    * 
-*/
+ *
+ * BOOKING REDUCER
+ *
+ */
+const BookingContextReducer = (state: IStepState, action: any) => {
+  switch (action.type) {
+    case "NEXT":
+      return {
+        step: Math.min(state.step + 1, 7),
+        value: Math.min(state.value + 16.66666666666667, 100),
+      };
+    case "BACK":
+      return {
+        step: Math.max(state.step - INITIAL_STATE.step, INITIAL_STATE.step),
+        value: Math.max(state.value - 16.66666666666667, INITIAL_STATE.value),
+      };
+    case "RESET":
+      return INITIAL_STATE;
+    case "NONE":
+      return { ...state };
+    default:
+      return state;
+  }
+};
 
-const BookingContext = React.createContext<IBookingContext | undefined>(undefined)
+/**
+ *
+ * REACT CREATE CONTEXT
+ *
+ */
 
+const BookingContext = React.createContext<IBookingContext | undefined>(
+  undefined,
+);
 
+const BookingContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  /**
+   *
+   * REACT USE STATE
+   *
+   */
+  const [bookingValue, setBookingValue] = React.useState<IBookingValue | null>(
+    null,
+  );
 
-const BookingContextProvider  = ({children}: {children: React.ReactNode}) => {
-    /**
-        * 
-        * REACT USE STATE 
-        * 
-    */
-    const [bookingValue, setBookingValue] = React.useState<IBookingValue | null>(null)
+  /**
+   *
+   * REACT CUSTOM CONTEXT
+   *
+   */
+  const { isLoggedIn, token } = useAuthContext();
 
-    /**
-        * 
-        * REACT CUSTOM CONTEXT 
-        * 
-    */
-    const {isLoggedIn, token} = useAuthContext()
+  /**
+   *
+   * REACT REDUCER
+   *
+   */
+  const [state, dispatch] = React.useReducer(
+    BookingContextReducer,
+    INITIAL_STATE,
+  );
 
-    /**
-        * 
-        * REACT REDUCER 
-        * 
-    */
-    const [state, dispatch] = React.useReducer(BookingContextReducer, INITIAL_STATE)
+  /**
+   *
+   * REACT USE EFFECTS
+   *
+   */
+  React.useEffect(() => {
+    if (isLoggedIn()) {
+      setBookingValue(null);
+      dispatch({ type: "RESET" });
+    }
+  }, [token]);
 
-    /**
-        * 
-        * REACT USE EFFECTS 
-        * 
-    */
-    React.useEffect(() => {
-        if(isLoggedIn()){
-            setBookingValue(null)
-            dispatch({type: 'RESET'})
-        }
-    }, [token])
+  /**
+   *
+   * REACT USE MEMOS
+   *
+   */
+  const contextValue = React.useMemo(
+    () => ({
+      bookingValue,
+      setBookingValue,
+      state,
+      dispatch,
+      stepDetails,
+    }),
+    [bookingValue, setBookingValue, state, dispatch],
+  );
 
-    /**
-        * 
-        * REACT USE MEMOS 
-        * 
-    */
-    const contextValue = React.useMemo(() => ({
-        bookingValue, 
-        setBookingValue,
-        state,
-        dispatch,
-        stepDetails
-    }),[bookingValue, setBookingValue, state, dispatch])
-    
   return (
     <BookingContext.Provider value={contextValue}>
-        { children }
+      {children}
     </BookingContext.Provider>
-  )
-}
+  );
+};
 
 /**
-    * 
-    * REACT CUSTOM CONTEXT 
-    * 
-*/
-export const useBookingContext = () : IBookingContext => {
+ *
+ * REACT CUSTOM CONTEXT
+ *
+ */
+export const useBookingContext = (): IBookingContext => {
   const context = React.useContext(BookingContext);
+
   if (!context) {
-    throw new Error("useBookingContext must be used within a BookingContextProvider");
+    throw new Error(
+      "useBookingContext must be used within a BookingContextProvider",
+    );
   }
+
   return context;
 };
 
-
-export default BookingContextProvider 
+export default BookingContextProvider;
