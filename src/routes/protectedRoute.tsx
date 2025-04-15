@@ -8,95 +8,102 @@ import { isTokenExpired } from "@/utils/authStorage";
 import LogoutModal from "@/components/logoutModal";
 export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: boolean}) => {
 
-    const role: "admin" | "client" | null = isAdmin ? "admin" : isClient ? "client" : null;
-  /*
-   *
-   * REACT USE CONTEXT
-   *
-   */
-  const { isLoggedIn, fetchUserData, isValidated, token } = useAuthContext();
-
-  /*
-   *
-   * REACT USE STATES
-   *
-   */
-
-  const [loading, setLoading] = React.useState(true);
-  const [logoutReason, setLogoutReason] = React.useState<string | null>(null);
+    /*
+        * REACT USE MEMOS
+    */
+    const role = React.useMemo(() => {
+        return isAdmin ? "admin" : isClient ? "client" : null;
+    }, [isAdmin, isClient]);
 
     /*
-        *
-        * REACT USE EFFECTS
-        *
+        * REACT USE CONTEXT
     */
+    const { isLoggedIn, fetchUserData, isValidated, token, logoutUser } = useAuthContext();
 
-  React.useEffect(() => {
-    const init = async () => {
-      if (!token) {
-        setLogoutReason("Unauthenticated");
+    /*
+        * REACT USE STATES
+    */
+    const [loading, setLoading] = React.useState(true);
+    const [logoutReason, setLogoutReason] = React.useState<string | null>(null);
+    const [redirect, setRedirect] = React.useState<string | null>(null);
 
-        return;
-      }
-      /*
-       * DECODING TOKEN
-       */
-      const decodedToken: any = jwtDecode<{ exp: number }>(token);
-
-      if (isTokenExpired(decodedToken.exp)) {
-        setLogoutReason("Authorization Expired");
-
-        return;
-      }
-
-      try {
-        const response: any = await fetchUserData();
-
-        if (response.status > 400) {
-          throw new Error("Response was not ok");
-        }   
-        
-        if (role && decodedToken.data.role !== role && response.data.data.role !== role ) {
-            setLogoutReason("Unauthorize");
-            return;
-        }
-
-      } catch (error: any) {
-        if (error.response?.status === 401) {
-          return <LogoutModal title="Unauthenticated" />;
-        }
-      } finally {
-        setLoading(false);
-      }
+    /*
+        * FUNCTIONS / HANDLERS 
+    */
+    const getFallbackUrl = (role: string) => {
+        return role === "admin" ? "/admin" : "/";
     };
 
-    init();
-  }, []);
+    const initializeAuthCheck = async () => {
+        if (!token) {
+            setRedirect("/login");
+            return;
+        }
+        /*
+            * DECODING TOKEN
+        */
+        let decodedToken: any = null;
+        let decodedTokenRole = null;
+        try {
+            decodedToken = jwtDecode<{ exp: number }>(token);
+            decodedTokenRole = decodedToken?.data?.role;
+        } catch (error) {
+            logoutUser()
+            return;
+        }
+        if (isTokenExpired(decodedToken.exp)) {
+            setLogoutReason("Authorization Expired");
+            return;
+        }
+        if (!decodedTokenRole) {
+            logoutUser();
+            return;
+        }
+        if(decodedTokenRole !== role) {
+            setRedirect(getFallbackUrl(decodedTokenRole));
+            return;
+        }
+        try {
+            const response: any = await fetchUserData();
+    
+            if (response.status > 400) throw new Error("Response was not ok");   
+            
+            const responseTokenRole: string = response.data.data.role;
+    
+            if (role && decodedToken.data.role !== role && responseTokenRole !== role ) {
+                setRedirect(getFallbackUrl(responseTokenRole));
+                return;
+            }
+    
+        } catch (error: any) {
+            if (error.response?.status === 401) {
+                setLogoutReason("Unauthenticated");
+                return 
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+    /*
+        * REACT USE LAYOUTEFFECTS
+    */
+    React.useLayoutEffect(() => {
+        initializeAuthCheck();
+    }, []);
 
-  /*
-   *
-   * MODAL
-   *
-   */
-  if (logoutReason) return <LogoutModal title={logoutReason} />;
+    /*
+        * LOADER COMPONENT
+    */
+    if (loading) return <LoaderComponent />;
 
-  /*
-   *
-   * LOADER
-   *
-   */
-  if (loading) return <LoaderComponent />;
+    /*
+        * REDIRECT TO LOGIN IF NOT AUTHENTICATED
+    */
+    if (!isLoggedIn() || !isValidated) return <Navigate to="/login" />;
+    if (logoutReason) return <LogoutModal title={logoutReason} />;
+    if (redirect) return <Navigate to={redirect} />;
 
-  /*
-   *
-   * REDIRECT TO LOGIN IF NOT AUTHENTICATED
-   *
-   */
-  if (!isLoggedIn() || !isValidated) {
-    return <Navigate to="/login" />;
-  }
-
-  return <Outlet />;
+    return <Outlet />;
 };
 
 export default AuthRoutes;
