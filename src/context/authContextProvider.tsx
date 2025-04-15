@@ -128,7 +128,7 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     setUser(null);
     setToken("");
     removeCookie("_accessToken");
-    navigate("/login");
+    navigate("/");
   };
 
   /**

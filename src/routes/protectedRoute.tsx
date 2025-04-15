@@ -100,10 +100,6 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         * LOADER COMPONENT
     */
     if (loading) return <LoaderComponent />;
-
-    /*
-        * REDIRECT TO LOGIN IF NOT AUTHENTICATED
-    */
     if (logoutReason) return <LogoutModal title={logoutReason} />;
     if (redirect) return <Navigate to={redirect} />;
     if (!isLoggedIn() || !isValidated) return <Navigate to="/login" />;
