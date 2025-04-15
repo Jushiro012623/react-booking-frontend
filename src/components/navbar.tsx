@@ -32,6 +32,9 @@ import {
 } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import { useAuthContext } from "@/context/authContextProvider";
+import React from "react";
+import Typography from "./ui/Typography";
+import { Spacer } from "@heroui/spacer";
 export const Navbar = () => {
   const { isLoggedIn, user, logoutUser } = useAuthContext();
   const searchInput = (
@@ -162,28 +165,46 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
-        {isLoggedIn() && <NavbarMenuToggle />}
+        <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
+      {isLoggedIn() && searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={index === 2 ? "primary" : "foreground"}
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-          <NavbarMenuItem>
-            <Link color={"danger"} size="lg" onPress={logoutUser}>
-              Logout
-            </Link>
-          </NavbarMenuItem>
+            {isLoggedIn() && siteConfig.navMenuItems.map((item, index) => (
+                <NavbarMenuItem key={`${item}-${index}`}>
+                <Link
+                    color={index === 2 ? "primary" : "foreground"}
+                    href="#"
+                    size="lg"
+                >
+                    {item.label}
+                </Link>
+                </NavbarMenuItem>
+            ))}
+            {isLoggedIn() && 
+                <NavbarMenuItem>
+                    <Link color={"danger"} size="lg" onPress={logoutUser}>
+                    Logout
+                    </Link>
+                </NavbarMenuItem>
+            }
+            {!isLoggedIn() && 
+                <React.Fragment>
+                    <Typography className="text-center" variant="h3">Welcome! Please sign in or sign up</Typography>
+                    <Spacer y={4} />
+                    <NavbarMenuItem>
+                        <Button color={"primary"} className="w-full" variant="light" as={Link} href={'/login'}>
+                            Login
+                        </Button>
+                    </NavbarMenuItem>
+                    <NavbarMenuItem>
+                        <Button color={"primary"} className="w-full" variant="flat" as={Link} href={'/login'}>
+                            Signup
+                        </Button>
+                    </NavbarMenuItem>
+                </React.Fragment>
+            }
         </div>
       </NavbarMenu>
     </HeroUINavbar>

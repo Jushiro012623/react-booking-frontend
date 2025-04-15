@@ -114,7 +114,7 @@ const Booking = () => {
    * REACT USE CONTEXTS
    *
    */
-  const { state, dispatch, bookingValue, stepDetails } = useBookingContext();
+  const { state, dispatch, bookingValue, stepDetails, setBookingValue } = useBookingContext();
   const { logoutUser } = useAuthContext();
 
   /*
@@ -139,9 +139,17 @@ const Booking = () => {
    *
    */
   React.useEffect(() => {
+    console.log('mount');
+    
     if (state.step === 1) {
       setBookingResponse(null);
     }
+    return () => {
+        if (!location.pathname.includes("/booking")) {
+          dispatch({ type: "RESET" });
+          setBookingValue(null);
+        }
+      };
   }, [state.step]);
 
   /*

@@ -38,6 +38,7 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         if (!token) {
             console.log('NO TOKEN');
             setRedirect("/login");
+            setLoading(false);
             return;
         }
         /*
@@ -50,18 +51,22 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
             decodedTokenRole = decodedToken?.data?.role;
         } catch (error) {
             logoutUser()
+            setLoading(false);
             return;
         }
         if (isTokenExpired(decodedToken.exp)) {
             setLogoutReason("Authorization Expired");
+            setLoading(false);
             return;
         }
         if (!decodedTokenRole) {
             logoutUser();
+            setLoading(false);
             return;
         }
         if(decodedTokenRole !== role) {
             setRedirect(getFallbackUrl(decodedTokenRole));
+            setLoading(false);
             return;
         }
         try {
@@ -79,7 +84,6 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         } catch (error: any) {
             if (error.response?.status === 401) {
                 setLogoutReason("Unauthenticated");
-                return 
             }
         } finally {
             setLoading(false);
@@ -92,8 +96,6 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         initializeAuthCheck();
     }, []);
 
-    if (logoutReason) return <LogoutModal title={logoutReason} />;
-    if (redirect) return <Navigate to={redirect} />;
     /*
         * LOADER COMPONENT
     */
@@ -102,6 +104,8 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
     /*
         * REDIRECT TO LOGIN IF NOT AUTHENTICATED
     */
+    if (logoutReason) return <LogoutModal title={logoutReason} />;
+    if (redirect) return <Navigate to={redirect} />;
     if (!isLoggedIn() || !isValidated) return <Navigate to="/login" />;
 
     return <Outlet />;
