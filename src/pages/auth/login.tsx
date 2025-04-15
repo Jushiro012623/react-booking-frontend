@@ -90,21 +90,21 @@ const Login = () => {
         >
           <Logo size={150} />
           <Input
-            className="max-w-full"
+            fullWidth
             label="Email or username"
             name="username"
             type="text"
           />
           <Spacer y={2} />
           <Input
-            className="max-w-full"
+            fullWidth
             label="Password"
             name="password"
             type="password"
           />
           <Spacer y={2} />
           <Button
-            className="w-full"
+            fullWidth
             color="primary"
             isLoading={isLoading}
             type="submit"

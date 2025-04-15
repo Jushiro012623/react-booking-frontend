@@ -194,12 +194,12 @@ export const Navbar = () => {
                     <Typography className="text-center" variant="h3">Welcome! Please sign in or sign up</Typography>
                     <Spacer y={4} />
                     <NavbarMenuItem>
-                        <Button color={"primary"} className="w-full" variant="light" as={Link} href={'/login'}>
+                        <Button fullWidth color={"primary"}  variant="light" as={Link} href={'/login'}>
                             Login
                         </Button>
                     </NavbarMenuItem>
                     <NavbarMenuItem>
-                        <Button color={"primary"} className="w-full" variant="flat" as={Link} href={'/login'}>
+                        <Button fullWidth color={"primary"} variant="flat" as={Link} href={'/login'}>
                             Signup
                         </Button>
                     </NavbarMenuItem>
