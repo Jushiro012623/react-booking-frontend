@@ -36,6 +36,7 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
 
     const initializeAuthCheck = async () => {
         if (!token) {
+            console.log('NO TOKEN');
             setRedirect("/login");
             return;
         }
@@ -91,6 +92,8 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         initializeAuthCheck();
     }, []);
 
+    if (logoutReason) return <LogoutModal title={logoutReason} />;
+    if (redirect) return <Navigate to={redirect} />;
     /*
         * LOADER COMPONENT
     */
@@ -100,8 +103,6 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
         * REDIRECT TO LOGIN IF NOT AUTHENTICATED
     */
     if (!isLoggedIn() || !isValidated) return <Navigate to="/login" />;
-    if (logoutReason) return <LogoutModal title={logoutReason} />;
-    if (redirect) return <Navigate to={redirect} />;
 
     return <Outlet />;
 };
