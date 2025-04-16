@@ -244,6 +244,7 @@ const Booking = () => {
             className="max-w-full"
             size="sm"
             value={state.value}
+            color={state.step === 7 ? "success" : "primary"}
           />
         </div>
 

@@ -35,6 +35,7 @@ import { useAuthContext } from "@/context/authContextProvider";
 import React from "react";
 import Typography from "./ui/Typography";
 import { Spacer } from "@heroui/spacer";
+import { useLocation } from "react-router-dom";
 export const Navbar = () => {
   const { isLoggedIn, user, logoutUser } = useAuthContext();
   const searchInput = (
@@ -57,7 +58,9 @@ export const Navbar = () => {
       type="search"
     />
   );
-
+  const location = useLocation();
+  const currentPath = location.pathname;
+  
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -73,13 +76,15 @@ export const Navbar = () => {
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href} isActive={item.label === "Booking"}>
+            <NavbarItem 
+                key={item.href} 
+                isActive={currentPath === item.href}
+                >
               <Link
                 className={clsx(
-                  linkStyles({ color: "foreground" }),
+                  linkStyles({ color: currentPath === item.href ? "primary" : "foreground" }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
-                color="foreground"
                 href={item.href}
                 isDisabled={item.label === "About"}
               >
@@ -174,8 +179,8 @@ export const Navbar = () => {
             {isLoggedIn() && siteConfig.navMenuItems.map((item, index) => (
                 <NavbarMenuItem key={`${item}-${index}`}>
                 <Link
-                    color={index === 2 ? "primary" : "foreground"}
-                    href="#"
+                    color={currentPath === item.href ? "primary" : "foreground"}
+                    href={item.href}
                     size="lg"
                 >
                     {item.label}

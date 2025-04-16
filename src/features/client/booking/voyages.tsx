@@ -10,7 +10,6 @@ import { IBookingValue } from "@/context/bookingContextProvider";
 import { TVoyage } from "@/models/voyages";
 import ErrorFetchingBooking from "@/components/errorFetchingBooking";
 import LogoutModal from "@/components/logoutModal";
-
 interface IVoyageCardProps {
   data: any;
   isLoading: boolean;
@@ -25,24 +24,9 @@ interface IVoyageCardProps {
  */
 const VoyageCard: React.FC<IVoyageCardProps> = ({
   data,
-  isLoading,
-  beforeData,
   handleOnVoyageChoose,
   bookingValue,
 }) => {
-  if (isLoading) {
-    return (
-      <React.Fragment>
-        {[...Array(beforeData)].map((_, idx) => (
-          <Card key={idx} className="h-full w-full" radius="lg">
-            <Skeleton className="rounded-lg h-40">
-              <div className="h-24 rounded-lg bg-default-300" />
-            </Skeleton>
-          </Card>
-        ))}
-      </React.Fragment>
-    );
-  } else {
     return (
       <React.Fragment>
         {data?.map((voyage: TVoyage, index: number) => (
@@ -69,9 +53,22 @@ const VoyageCard: React.FC<IVoyageCardProps> = ({
         ))}
       </React.Fragment>
     );
-  }
 };
 
+const VoyageCardSkeleton: React.FC<{beforeData: number}> = ({beforeData}) => {
+    
+    return (
+        <React.Fragment>
+        {[...Array(beforeData)].map((_, idx) => (
+          <Card key={idx} className="h-full w-full" radius="lg">
+            <Skeleton className="rounded-lg h-40">
+              <div className="h-24 rounded-lg bg-default-300" />
+            </Skeleton>
+          </Card>
+        ))}
+      </React.Fragment>
+    );
+}
 /*
  *
  * MAIN PRESENTER
@@ -121,35 +118,34 @@ const Voyages = () => {
     );
   }
 
-  if (error)
-    return <ErrorFetchingBooking isLoading={isLoading} refetch={refetch} />;
-
+  if (error) return <ErrorFetchingBooking isLoading={isLoading} refetch={refetch} />;
+  if (isLoading) return <VoyageCardSkeleton beforeData={beforeData} />;
   /*
    *
    * HANDLERS
    *
    */
-  const handleOnVoyageChoose = (event: any) => {
-    const voyage: any = JSON.parse(event.target.value);
+    const handleOnVoyageChoose = (event: any) => {
+        const voyage: any = JSON.parse(event.target.value);
 
-    setBookingValue((prev: IBookingValue) => ({
-      ...prev,
-      itineraries: null,
-      voyage,
-    }));
+        setBookingValue((prev: IBookingValue) => ({
+        ...prev,
+        itineraries: null,
+        voyage,
+        }));
 
-    dispatch({ type: "NEXT" });
-  };
+        dispatch({ type: "NEXT" });
+    };
 
-  return (
-    <VoyageCard
-      beforeData={beforeData}
-      bookingValue={bookingValue}
-      data={data?.data}
-      handleOnVoyageChoose={handleOnVoyageChoose}
-      isLoading={isLoading}
-    />
-  );
+    return (
+        <VoyageCard
+        beforeData={beforeData}
+        bookingValue={bookingValue}
+        data={data?.data}
+        handleOnVoyageChoose={handleOnVoyageChoose}
+        isLoading={isLoading}
+        />
+    );
 };
 
 export default Voyages;

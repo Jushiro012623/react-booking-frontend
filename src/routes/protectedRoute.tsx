@@ -6,14 +6,14 @@ import { useAuthContext } from "@/context/authContextProvider";
 import { LoaderComponent } from "@/components/loadable";
 import { isTokenExpired } from "@/utils/authStorage";
 import LogoutModal from "@/components/logoutModal";
-export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: boolean}) => {
 
+export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: boolean}) => {
     /*
         * REACT USE MEMOS
     */
     const role = React.useMemo(() => {
         return isAdmin ? "admin" : isClient ? "client" : null;
-    }, [isAdmin, isClient]);
+    }, [isAdmin, isClient]); 
 
     /*
         * REACT USE CONTEXT
@@ -101,7 +101,7 @@ export const AuthRoutes = ({isAdmin, isClient}: {isAdmin?: boolean, isClient?: b
     */
     if (loading) return <LoaderComponent />;
     if (logoutReason) return <LogoutModal title={logoutReason} />;
-    if (redirect) return <Navigate to={redirect} />;
+    if (redirect) return <Navigate to={redirect} replace/>;
     if (!isLoggedIn() || !isValidated) return <Navigate to="/login" />;
 
     return <Outlet />;
