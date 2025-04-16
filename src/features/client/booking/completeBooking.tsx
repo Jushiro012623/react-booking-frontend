@@ -53,7 +53,7 @@ const CompleteBooking = ({ isOpen, onOpenChange, data }: any) => {
             <>
               <ModalHeader className="flex flex-col gap-1 items-center">
                 <Image
-                  alt="heroui logo"
+                  alt="check icon"
                   height={40}
                   radius="sm"
                   src={checkIcon}
@@ -74,17 +74,9 @@ const CompleteBooking = ({ isOpen, onOpenChange, data }: any) => {
                   <Spacer y={2} />
                   <Typography variant="small">AMOUNT PAYABLE</Typography>
                 </div>
-                <Spacer />
                 <Divider />
                 <Spacer />
                 <div className="w-full">
-                  <div className="flex w-full justify-between items-center">
-                    <Typography variant="small">REFERENCE NUMBER</Typography>
-                    <Snippet color="success" hideSymbol >
-                        {data.data.reference_no}
-                    </Snippet>
-                  </div>
-                  <Spacer y={4} />
                   <div className="flex w-full justify-between">
                     <Typography variant="small">BOOKING ROUTE</Typography>
                     <Typography className="uppercase" variant="small">
@@ -110,6 +102,15 @@ const CompleteBooking = ({ isOpen, onOpenChange, data }: any) => {
                   <Spacer y={5} />
                   <Divider />
                 </div>
+                <Spacer />
+                <div className="flex w-full flex-col items-center">
+                    <Snippet color="success" hideSymbol>
+                        {data.data.reference_no}
+                    </Snippet>
+                    <Spacer y={2} />
+                    <Typography variant="small">REFERENCE NUMBER</Typography>
+                </div>
+                <Divider />
               </ModalBody>
               <ModalFooter>
                 <div className="w-full">
