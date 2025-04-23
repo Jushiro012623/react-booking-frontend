@@ -7,15 +7,6 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [react(), tsconfigPaths()],
-        server:{
-            host: '0.0.0.0',
-            proxy: { 
-                '/api/v1': {
-                    target: env.VITE_API_URL,
-                    changeOrigin: true,
-                },
-
-            }  
-        }
+        
     }
 })
