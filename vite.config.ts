@@ -7,6 +7,5 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [react(), tsconfigPaths()],
-        
     }
 })
