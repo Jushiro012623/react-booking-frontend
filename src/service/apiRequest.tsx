@@ -35,7 +35,7 @@ export type TResponse = {
  *
  */
 export const axiosDefaults = new ApiRequestBuilder()
-  .setBaseUrl(`${app.apiUrl / app.apiEndPoint}`)
+  .setBaseUrl(`${app.apiUrl/app.apiEndPoint}`)
   .setTimeout(5000)
   .setHeaders({ Accept: "application/json" });
 
