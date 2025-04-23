@@ -104,11 +104,11 @@ const CompleteBooking = ({ isOpen, onOpenChange, data }: any) => {
                 </div>
                 <Spacer />
                 <div className="flex w-full flex-col items-center">
-                    <Snippet color="success" hideSymbol>
-                        {data.data.reference_no}
-                    </Snippet>
-                    <Spacer y={2} />
-                    <Typography variant="small">REFERENCE NUMBER</Typography>
+                  <Snippet hideSymbol color="success">
+                    {data.data.reference_no}
+                  </Snippet>
+                  <Spacer y={2} />
+                  <Typography variant="small">REFERENCE NUMBER</Typography>
                 </div>
                 <Divider />
               </ModalBody>

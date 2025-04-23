@@ -4,7 +4,6 @@ interface Config {
   appName: string;
 }
 
-
 const config: Config = {
   apiUrl: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000",
   apiEndPoint: import.meta.env.VITE_API_ENDPOINT || "api/",

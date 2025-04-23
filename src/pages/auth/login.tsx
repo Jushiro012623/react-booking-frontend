@@ -96,19 +96,9 @@ const Login = () => {
             type="text"
           />
           <Spacer y={2} />
-          <Input
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-          />
+          <Input fullWidth label="Password" name="password" type="password" />
           <Spacer y={2} />
-          <Button
-            fullWidth
-            color="primary"
-            isLoading={isLoading}
-            type="submit"
-          >
+          <Button fullWidth color="primary" isLoading={isLoading} type="submit">
             Login
           </Button>
           <Spacer y={2} />

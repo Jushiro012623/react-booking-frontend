@@ -91,7 +91,7 @@ const Itineraries = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  
+
   return (
     <div className="w-full flex flex-wrap gap-2 mt-10">
       {isLoading

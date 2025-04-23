@@ -20,6 +20,11 @@ import {
 import { Avatar } from "@heroui/avatar";
 import { link as linkStyles } from "@heroui/theme";
 import clsx from "clsx";
+import React from "react";
+import { Spacer } from "@heroui/spacer";
+import { useLocation } from "react-router-dom";
+
+import Typography from "./ui/Typography";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -32,10 +37,7 @@ import {
 } from "@/components/icons";
 import { Logo } from "@/components/icons";
 import { useAuthContext } from "@/context/authContextProvider";
-import React from "react";
-import Typography from "./ui/Typography";
-import { Spacer } from "@heroui/spacer";
-import { useLocation } from "react-router-dom";
+
 export const Navbar = () => {
   const { isLoggedIn, user, logoutUser } = useAuthContext();
   const searchInput = (
@@ -60,7 +62,7 @@ export const Navbar = () => {
   );
   const location = useLocation();
   const currentPath = location.pathname;
-  
+
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -76,13 +78,12 @@ export const Navbar = () => {
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem 
-                key={item.href} 
-                isActive={currentPath === item.href}
-                >
+            <NavbarItem key={item.href} isActive={currentPath === item.href}>
               <Link
                 className={clsx(
-                  linkStyles({ color: currentPath === item.href ? "primary" : "foreground" }),
+                  linkStyles({
+                    color: currentPath === item.href ? "primary" : "foreground",
+                  }),
                   "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 href={item.href}
@@ -174,42 +175,57 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-      {isLoggedIn() && searchInput}
+        {isLoggedIn() && searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-            {isLoggedIn() && siteConfig.navMenuItems.map((item, index) => (
-                <NavbarMenuItem key={`${item}-${index}`}>
+          {isLoggedIn() &&
+            siteConfig.navMenuItems.map((item, index) => (
+              <NavbarMenuItem key={`${item}-${index}`}>
                 <Link
-                    color={currentPath === item.href ? "primary" : "foreground"}
-                    href={item.href}
-                    size="lg"
+                  color={currentPath === item.href ? "primary" : "foreground"}
+                  href={item.href}
+                  size="lg"
                 >
-                    {item.label}
+                  {item.label}
                 </Link>
-                </NavbarMenuItem>
+              </NavbarMenuItem>
             ))}
-            {isLoggedIn() && 
-                <NavbarMenuItem>
-                    <Link color={"danger"} size="lg" onPress={logoutUser}>
-                    Logout
-                    </Link>
-                </NavbarMenuItem>
-            }
-            {!isLoggedIn() && 
-                <React.Fragment>
-                    <Typography className="text-center" variant="h3">Welcome! Please sign in or sign up</Typography>
-                    <Spacer y={4} />
-                    <NavbarMenuItem>
-                        <Button fullWidth color={"primary"}  variant="light" as={Link} href={'/login'}>
-                            Login
-                        </Button>
-                    </NavbarMenuItem>
-                    <NavbarMenuItem>
-                        <Button fullWidth color={"primary"} variant="flat" as={Link} href={'/login'}>
-                            Signup
-                        </Button>
-                    </NavbarMenuItem>
-                </React.Fragment>
-            }
+          {isLoggedIn() && (
+            <NavbarMenuItem>
+              <Link color={"danger"} size="lg" onPress={logoutUser}>
+                Logout
+              </Link>
+            </NavbarMenuItem>
+          )}
+          {!isLoggedIn() && (
+            <React.Fragment>
+              <Typography className="text-center" variant="h3">
+                Welcome! Please sign in or sign up
+              </Typography>
+              <Spacer y={4} />
+              <NavbarMenuItem>
+                <Button
+                  fullWidth
+                  as={Link}
+                  color={"primary"}
+                  href={"/login"}
+                  variant="light"
+                >
+                  Login
+                </Button>
+              </NavbarMenuItem>
+              <NavbarMenuItem>
+                <Button
+                  fullWidth
+                  as={Link}
+                  color={"primary"}
+                  href={"/login"}
+                  variant="flat"
+                >
+                  Signup
+                </Button>
+              </NavbarMenuItem>
+            </React.Fragment>
+          )}
         </div>
       </NavbarMenu>
     </HeroUINavbar>
