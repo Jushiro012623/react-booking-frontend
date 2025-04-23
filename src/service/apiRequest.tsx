@@ -57,7 +57,7 @@ const Api = axios.create(axiosDefaults.build());
 Api.interceptors.request.use(
   async (config: any) => {
     const token: TToken | null = getCookie("_accessToken");
-
+    console.log(axiosDefaults)
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
