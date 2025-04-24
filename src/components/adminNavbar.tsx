@@ -3,8 +3,12 @@ import { Navbar, NavbarBrand, NavbarContent } from "@heroui/navbar";
 import { Logo } from "./icons";
 import { Avatar } from "@heroui/avatar";
 import { ThemeSwitch } from "./theme-switch";
+import { useAuthContext } from "@/context/authContextProvider";
 
 const AdminNavbar = () => {
+
+    const {logoutUser, user} = useAuthContext()
+
   return (
     <Navbar className="shadow">
       <NavbarBrand>
@@ -29,12 +33,12 @@ const AdminNavbar = () => {
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold">{user.email}</p>
             </DropdownItem>
             <DropdownItem key="settings">My Settings</DropdownItem>
             <DropdownItem key="team_settings">Team Settings</DropdownItem>
             <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="logout" color="danger" onPress={logoutUser}>
               Log Out
             </DropdownItem>
           </DropdownMenu>

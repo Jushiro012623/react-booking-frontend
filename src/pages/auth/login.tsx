@@ -32,6 +32,7 @@ const Login = () => {
    *
    */
   const attepmtToLogin = async (data: any) => {
+
     const response: any = await loginUser(data);
 
     showToast("Login Successfully", response.data.message, "success");

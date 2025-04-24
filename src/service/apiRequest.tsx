@@ -102,11 +102,8 @@ const loginApi = async (data: { username: string; password: string }) => {
     .setData(data)
     .setUrl("auth/login");
 
-  const response: TResponse = await Api(loginRequest.build());
+    return await Api(loginRequest.build());
 
-  if (response.status !== 200) throw new Error("Response was not ok");
-
-  return response;
 };
 
 /**
@@ -118,12 +115,8 @@ const loginApi = async (data: { username: string; password: string }) => {
  */
 const fetchUser = async () => {
   const fetchSelf = axiosDefaults.setMethod("POST").setUrl("auth/me");
-
-  const response: TResponse = await Api(fetchSelf.build());
-
-  if (response.status !== 200) throw new Error("Response was not ok");
-
-  return response;
+  return await Api(fetchSelf.build());
+  
 };
 
 /*

@@ -87,9 +87,6 @@ const AuthContextProvider: React.FC<Props> = ({ children }) => {
     try {
       const response: TResponse = await loginApi(data);
 
-      if (response.status >= 400)
-        throw new Error("Network response was not ok");
-
       const token: string | null = response.data.data.access_token;
       const user: TUser = response.data.data.user;
 
