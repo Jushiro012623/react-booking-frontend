@@ -17,9 +17,13 @@ const Booking = Loadable(React.lazy(() => import("@/pages/client/booking")));
  *
  */
 const AdminLayout = Loadable(React.lazy(() => import("@/layouts/adminLayout")));
-const AdminIndexPage = Loadable(
-  React.lazy(() => import("@/pages/admin/index")),
-);
+const AdminIndexPage = Loadable(React.lazy(() => import("@/pages/admin/index")));
+/*
+    * 
+    * Booking 
+    * 
+*/
+const AllBooking = Loadable(React.lazy(() => import("@/pages/admin/booking")));
 
 function ReactRouters() {
   return (
@@ -58,6 +62,10 @@ function ReactRouters() {
       <Route element={<AuthRoutes isAdmin />}>
         <Route element={<AdminLayout />} path="/admin">
           <Route index element={<AdminIndexPage />} />
+
+            <Route path="booking">
+                <Route index element={<AllBooking />} />
+            </Route>
         </Route>
       </Route>
       {/*

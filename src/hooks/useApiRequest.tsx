@@ -89,10 +89,6 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
           builder.setSignal(abortController.signal).build(),
         );
 
-        if (response.status >= 400) {
-          throw new Error("Network response was not ok");
-        }
-
         const result = response.data;
 
         /*
