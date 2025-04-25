@@ -127,7 +127,6 @@ const Booking = () => {
     const payload = {
       ...valueToSubmit(bookingValue),
     };
-
     return new ApiRequestBuilder()
       .setData(payload)
       .setMethod("POST")
@@ -140,7 +139,6 @@ const Booking = () => {
    *
    */
   React.useEffect(() => {
-    console.log("mount");
 
     if (state.step === 1) {
       setBookingResponse(null);

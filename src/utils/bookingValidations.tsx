@@ -86,6 +86,7 @@ export const canProceedToNextStep = (
 export const valueToSubmit = (bookingValue: IBookingValue) => {
   const values: any = {
     cargo_fare_matrices_code: bookingValue?.fare?.cargo_fare_matrices_code,
+    voyage_code: bookingValue?.voyage?.voyage_code,
     itinerary_code: bookingValue?.itineraries?.itinerary_code,
     contact_no: bookingValue?.info?.contact_no,
     reference_no: GENERATE_TRANSACTION_ID,
@@ -108,7 +109,6 @@ export const valueToSubmit = (bookingValue: IBookingValue) => {
     values.receiver_contact_no = bookingValue?.info?.receiver_contact_no;
     values.receiver_name = bookingValue?.info?.receiver_name;
   }
-
   return values;
 };
 

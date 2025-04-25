@@ -147,7 +147,7 @@ const CompleteBooking = ({ isOpen, onOpenChange, data }: any) => {
 
 const PassengerInfo = ({ passenger }: any) => {
   const components = [
-    { key: "1", title: "PASSENGER NAME", value: passenger?.passenger_name },
+    { key: "1", title: "PASSENGER NAME", value: passenger?.passenger_name.toUpperCase() },
     { key: "2", title: "DISCOUNT", value: passenger?.discount },
     {
       key: "3",
