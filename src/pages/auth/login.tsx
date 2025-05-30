@@ -10,6 +10,7 @@ import { showToast } from "@/helpers/showToast";
 import { useAuthContext } from "@/context/authContextProvider";
 import Typography from "@/components/ui/Typography";
 import { Logo } from "@/components/icons";
+import SEO from "@/components/helmet";
 
 const Login = () => {
   /*
@@ -83,6 +84,7 @@ const Login = () => {
 
   return (
     <main className="flex items-center justify-center dark text-foreground bg-background h-screen">
+    <SEO title="Login" description="Login Form"/>
       <div>
         <Form
           className="w-72 sm:w-96 flex items-center"

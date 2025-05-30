@@ -62,7 +62,8 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
        * SET HTTP REQUEST TO CACHE VARIABLE
        *
        */
-      const cacheKey = `${httpRequest.method}_${httpRequest.url}_${JSON.stringify(httpRequest.params)}_${JSON.stringify(responseData)}`;
+      const cacheKey = `${httpRequest.method}_${httpRequest.url}_${JSON.stringify(httpRequest.params)}`;
+
       const cached = cache[cacheKey];
 
       /*
@@ -127,10 +128,22 @@ export const useApiRequest = (builder: ApiRequestBuilder) => {
    */
   React.useEffect(() => {
     const abortController = new AbortController();
-
-    requestFromApi(abortController);
-
-    return () => abortController.abort();
+    let isCurrent = true;
+  
+    const run = async () => {
+        try {
+          await requestFromApi(abortController);
+          if (!isCurrent) return;
+        } catch (err) {
+        }
+      };
+  
+    run();
+  
+    return () => {
+      isCurrent = false;
+      abortController.abort();
+    };
   }, [
     httpRequest.url,
     httpRequest.method,

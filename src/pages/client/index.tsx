@@ -3,10 +3,13 @@ import { button as buttonStyles } from "@heroui/theme";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
+import SEO from "@/components/helmet";
 
 export default function IndexPage() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 ">
+      <SEO title="Home" description="Home" />
+      
       <div className="inline-block max-w-lg text-center justify-center mt-20">
         <span className={title()}>Smart&nbsp;</span>
         <span className={title({ color: "violet" })}>
@@ -28,8 +31,7 @@ export default function IndexPage() {
             radius: "full",
             variant: "shadow",
           })}
-          href={siteConfig.booking}
-        >
+          href={siteConfig.booking}>
           Book with us now
         </Link>
       </div>

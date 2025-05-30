@@ -18,7 +18,7 @@ const GENERATE_TRANSACTION_ID = `RFNS-${Math.random().toString(36).substring(2, 
  */
 export const canProceedToNextStep = (
   state: IStepState,
-  bookingValue: IBookingValue,
+  bookingValue: IBookingValue
 ) => {
   /*
    *

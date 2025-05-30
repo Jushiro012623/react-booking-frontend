@@ -35,8 +35,7 @@ const Itineraries = () => {
    */
   const fetchItenirariesFromAPI = React.useMemo(
     () =>
-      new ApiRequestBuilder()
-        .setUrl("/client/bookingProcess/getJourneySchedules")
+      new ApiRequestBuilder("/client/bookingProcess/getJourneySchedules")
         .setMethod("POST")
         .setData({
           voyage_code: bookingValue?.voyage?.voyage_code,

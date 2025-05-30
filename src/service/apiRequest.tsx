@@ -34,7 +34,7 @@ export type TResponse = {
  * AXIOS DEFAULTS
  *
  */
-export const axiosDefaults = new ApiRequestBuilder()
+export const axiosDefaults = new ApiRequestBuilder("")
   .setBaseUrl(app.apiUrl)
   .setTimeout(5000)
   .setHeaders({ Accept: "application/json" });
@@ -57,6 +57,7 @@ const Api = axios.create(axiosDefaults.build());
 Api.interceptors.request.use(
   async (config: any) => {
     const token: TToken | null = getCookie("_accessToken");
+    
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

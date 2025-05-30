@@ -90,7 +90,7 @@ const Voyages = () => {
    */
   const fetchVoyagesFromAPI = React.useMemo(
     () =>
-      new ApiRequestBuilder().setUrl("/client/bookingProcess/getVoyagesList"),
+      new ApiRequestBuilder("/client/bookingProcess/getVoyagesList"),
     [],
   );
 

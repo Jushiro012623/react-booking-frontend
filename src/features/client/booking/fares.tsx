@@ -44,8 +44,7 @@ const Fares = () => {
    */
   const fetchFareMatrice = React.useMemo(
     () =>
-      new ApiRequestBuilder()
-        .setUrl(`/client/bookingProcess/getFareMatrices`)
+      new ApiRequestBuilder("/client/bookingProcess/getFareMatrices")
         .addParam("booking_route_code", bookingValue?.route?.booking_route_code)
         .addParam("booking_type", bookingValue?.booking_type.id),
     [],

@@ -51,6 +51,7 @@ import {
 import { useBookingContext } from "@/context/bookingContextProvider";
 import { useAuthContext } from "@/context/authContextProvider";
 import { showToast } from "@/helpers/showToast";
+import SEO from "@/components/helmet";
 
 const BookingStepContent = [
   {
@@ -127,10 +128,9 @@ const Booking = () => {
     const payload = {
       ...valueToSubmit(bookingValue),
     };
-    return new ApiRequestBuilder()
+    return new ApiRequestBuilder("client/bookingProcess/cargoBookingProcess")
       .setData(payload)
-      .setMethod("POST")
-      .setUrl("client/bookingProcess/cargoBookingProcess");
+      .setMethod("POST");
   }, [bookingValue]);
 
   /*
@@ -139,7 +139,6 @@ const Booking = () => {
    *
    */
   React.useEffect(() => {
-
     if (state.step === 1) {
       setBookingResponse(null);
     }
@@ -157,7 +156,7 @@ const Booking = () => {
    * HELPERS
    *
    */
-  const canUserProceedToNextStep = (): void => {
+  const showErrorToast = (): void => {
     showToast("Failed to next step", stepDetails(state).errorMessage, "danger");
     dispatch({ type: "NONE" });
   };
@@ -169,7 +168,7 @@ const Booking = () => {
       showToast(
         "Booking Successful",
         "Your booking has been successfully processed.",
-        "success",
+        "success"
       );
     }
 
@@ -180,7 +179,7 @@ const Booking = () => {
     showToast(
       "Booking Error",
       error?.response?.data?.message || "Network Error",
-      "danger",
+      "danger"
     );
     if (error?.response?.status === 401) {
       logoutUser();
@@ -205,15 +204,15 @@ const Booking = () => {
    */
   const handleOnNext = async () => {
     if (!canProceedToNextStep(state, bookingValue)) {
-      return canUserProceedToNextStep();
+      return showErrorToast();
     }
+
     if (state.step === 7) {
       try {
         setIsBookingLoading(true);
         const response: any = await submitBooking();
-
-        setBookingResponse(await response.data);
-
+        const data: any = await response.data;
+        setBookingResponse(data);
         return onOpen();
       } catch (error: any) {
         return catchSubmitBookingError(error);
@@ -227,6 +226,7 @@ const Booking = () => {
 
   return (
     <div className="min-h-screen w-full place-items-center pt-16">
+      <SEO title="Booking Process" description="Booking Process" />
       <div className="relative w-full px-10 lg:w-[900px] 2xl:w-[1000px]">
         <Breadcrumbs className="mb-10">
           <BreadcrumbItem>Home</BreadcrumbItem>
@@ -270,8 +270,7 @@ const Booking = () => {
           {state.step !== 1 && (
             <Button
               isDisabled={isBookingLoading}
-              onPress={() => dispatch({ type: "BACK" })}
-            >
+              onPress={() => dispatch({ type: "BACK" })}>
               Back
             </Button>
           )}
@@ -280,8 +279,7 @@ const Booking = () => {
             isDisabled={isBookingLoading}
             isLoading={isBookingLoading}
             type={"submit"}
-            onPress={handleOnNext}
-          >
+            onPress={handleOnNext}>
             {submitButtonText()}
           </Button>
         </div>

@@ -36,7 +36,7 @@ const Routes = () => {
    */
   const fetchVoyagesFromAPI = React.useMemo(
     () =>
-      new ApiRequestBuilder().setUrl(`/client/bookingProcess/getRoutesList`),
+      new ApiRequestBuilder(`/client/bookingProcess/getRoutesList`),
     [],
   );
 

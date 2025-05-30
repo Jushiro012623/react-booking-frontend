@@ -8,11 +8,17 @@ import {
 } from "@heroui/table";
 import React from "react";
 import { Tooltip } from "@heroui/tooltip";
-import { Chip, ChipProps } from "@heroui/chip";
+import { Chip } from "@heroui/chip";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { ApiRequestBuilder } from "@/service/apiRequestBuilder";
 import { Spinner } from "@heroui/spinner";
-import { ChevronDownIcon, DeleteIcon, EditIcon, EyeIcon, SearchIcon } from "@/components/icons";
+import {
+  ChevronDownIcon,
+  DeleteIcon,
+  EditIcon,
+  EyeIcon,
+  SearchIcon,
+} from "@/components/icons";
 import { Spacer } from "@heroui/spacer";
 import { Pagination } from "@heroui/pagination";
 import LogoutModal from "@/components/logoutModal";
@@ -26,40 +32,8 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/dropdown";
-
-const columns = [
-  { name: "REFERENCE NUMBER", uid: "reference" },
-  { name: "BOOKED BY", uid: "customer" },
-  { name: "BOOKING DETAILS", uid: "booking" },
-  { name: "STATUS", uid: "status" },
-  { name: "ACTIONS", uid: "actions" },
-];
-
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  0: "default",
-  1: "warning",
-  2: "success",
-  3: "danger",
-};
-
-const bookingType: any = {
-  1: "Passenger",
-  2: "Rolling Cargo",
-  3: "Drop Cargo",
-};
-
-const statusValue: any = {
-  0: "Pending",
-  1: "On Board",
-  2: "Success",
-  3: "Canceled",
-};
-
-const voyage: any = {
-  0: "Argo 1",
-  1: "Argo 2",
-  2: "SUDA",
-};
+import { bookingType, columns, statusColorMap, statusValue } from "@/helpers/booking";
+import { debounce } from "lodash";
 
 const BottomContent = ({
   data,
@@ -86,9 +60,9 @@ const BottomContent = ({
 
   return (
     <React.Fragment>
-      {data?.pagination.last_page > 1  && (
+      {data?.pagination.last_page > 1 && (
         <React.Fragment>
-          <Spacer y={'px'} />
+          <Spacer y={"px"} />
           <div className="py-2 px-2 flex justify-between items-center">
             <Typography variant="small">
               Showing Result {data?.pagination.to} out of{" "}
@@ -129,19 +103,55 @@ const BottomContent = ({
   );
 };
 
-const TopContent = () => {
+const TopContent = ({setFilter,filter}: any) => {
+
+    const debouncedSetFilter = React.useMemo(() => debounce(setFilter, 300), []);
+
+    const [searchValue, setSearchValue] = React.useState(filter.search);
+
+    const handleFilterStatus = (selected: any) => {
+        debouncedSetFilter((prev: any) => ({
+            ...prev,
+            status: new Set(selected),
+        }));
+    };
+
+    const handleFilterBookingType = (selected: any) => {
+        debouncedSetFilter((prev: any) => ({
+            ...prev,
+            type: new Set(selected),
+        }));
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            
+            debouncedSetFilter((prev: any) => ({
+                ...prev,
+                search: searchValue,
+            }));
+        }
+      };
+      const handleClear = () => {
+        setSearchValue("");
+        debouncedSetFilter((prev: any) => ({
+          ...prev,
+          search: "",
+        }));
+      };
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
         <div className="w-full sm:w-96">
-            <Input
+          <Input
             isClearable
             placeholder="Search by reference no..."
             startContent={<SearchIcon />}
-            // value={filterValue}
-            // onClear={() => onClear()}
-            // onValueChange={onSearchChange}
-            />
+            value={searchValue}
+            onValueChange={setSearchValue}
+            onClear={handleClear}
+            onKeyDown={handleKeyDown}
+          />
         </div>
         <div className="flex gap-3">
           <Dropdown>
@@ -156,9 +166,9 @@ const TopContent = () => {
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
-              // selectedKeys={statusFilter}
+              selectedKeys={filter.status}
               selectionMode="multiple"
-              // onSelectionChange={setStatusFilter}
+              onSelectionChange={handleFilterStatus}
             >
               {Object.entries(statusValue).map(([key, value]: any) => (
                 <DropdownItem key={key} className="capitalize">
@@ -179,9 +189,9 @@ const TopContent = () => {
               disallowEmptySelection
               aria-label="Table Columns"
               closeOnSelect={false}
-              // selectedKeys={statusFilter}
+              selectedKeys={filter.type}
               selectionMode="multiple"
-              // onSelectionChange={setStatusFilter}
+              onSelectionChange={handleFilterBookingType}
             >
               {Object.entries(bookingType).map(([key, value]: any) => (
                 <DropdownItem key={key} className="capitalize">
@@ -190,32 +200,8 @@ const TopContent = () => {
               ))}
             </DropdownMenu>
           </Dropdown>
-          <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
-              <Button
-                endContent={<ChevronDownIcon className="text-small" />}
-                variant="flat">
-                Voyage
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              disallowEmptySelection
-              aria-label="Table Columns"
-              closeOnSelect={false}
-              // selectedKeys={statusFilter}
-              selectionMode="multiple"
-              // onSelectionChange={setStatusFilter}
-            >
-              {Object.entries(voyage).map(([key, value]: any) => (
-                <DropdownItem key={key} className="capitalize">
-                  {value}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          
         </div>
-      </div> 
+      </div>
       <Spacer y={"px"} />
     </div>
   );
@@ -223,17 +209,23 @@ const TopContent = () => {
 
 const GetAllBooking = () => {
   const [currentPage, setCurrentPage] = React.useState<number>(1);
+  const [filter, setFilter] = React.useState<any>({
+    status: new Set(Object.keys(statusValue)),
+    search: '',
+    type: new Set(Object.keys(bookingType))
+  });
 
   const getAllBookingRequest = React.useMemo(
     () =>
-      new ApiRequestBuilder()
-        .setUrl("/admin/tickets")
-        .addParam("page", currentPage),
-    [currentPage]
+      new ApiRequestBuilder("/admin/tickets")
+        .addParam("page", currentPage)
+        .addParam("search", filter.search)
+        .addParam("type", Array.from(filter.type).join(","))
+        .addParam("status",  Array.from(filter.status).join(",")),
+    [currentPage,filter.status, filter.type, filter.search]
   );
 
-  const { data, isLoading, error, refetch } =
-    useApiRequest(getAllBookingRequest);
+  const { data, isLoading, error, refetch } = useApiRequest(getAllBookingRequest);
 
   const renderCell = React.useCallback((booking: any, columnKey: React.Key) => {
     switch (columnKey) {
@@ -311,14 +303,14 @@ const GetAllBooking = () => {
     );
   }
 
-  if (error)
-    return <ErrorFetchingBooking isLoading={isLoading} refetch={refetch} />;
+  if (error){
+    return <ErrorFetchingBooking isLoading={isLoading} refetch={refetch} />;}
 
   return (
     <React.Fragment>
       <Table
         aria-label="Booking table"
-        topContent={<TopContent />}
+        topContent={<TopContent setFilter={setFilter} filter={filter}  setCurrentPage={setCurrentPage}/>}
         bottomContent={
           <BottomContent
             page={currentPage}

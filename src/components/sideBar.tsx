@@ -26,7 +26,7 @@ const SideBar = () => {
           currentPath.startsWith(href) ? "!text-blue-500 text-black !font-bold" : "hover:bg-gray-100 hover:text-black "
     );
   return (
-    <div className="w-80">
+    <div className="w-32 md:w-80">
         <div className="px-2 ">
             <Link color="foreground" className=" pb-4 font-semibold cursor-pointer w-full">Dashboard</Link>
             <Divider />

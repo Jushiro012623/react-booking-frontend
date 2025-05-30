@@ -10,7 +10,7 @@ const AdminLayout = () => {
       <main className="min-h-screen">
         <AdminNavbar />
         <Spacer y={20}/>
-        <div className="flex mx-[8%] ">
+        <div className="flex mx-10 md:mx-[8%]">
             <SideBar />
             <Spacer x={32}/>
             <Outlet />
