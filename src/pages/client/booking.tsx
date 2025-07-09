@@ -118,7 +118,7 @@ const Booking = () => {
   const { state, dispatch, bookingValue, stepDetails, setBookingValue } =
     useBookingContext();
   const { logoutUser } = useAuthContext();
-
+  console.log(bookingValue)
   /*
    *
    * REACT USE MEMOS
